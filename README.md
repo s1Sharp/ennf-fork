@@ -22,9 +22,8 @@ responsible for neural network inference and training.
 
 * `nn_lib.math_fns` implements the expected behaviour of every supported mathematical 
 function during both forward (value) and backward (gradient) passes
-* `nn_lib.tests` contains rich test base for checking the correctness of implemented
-mathematical operations; tests are separated into two main groups for checking
-(1) forward and (2) backward computation 
+* `nn_lib.tests` contains rich test base target at checking the correctness of
+students' implementations
 * `nn_lib.tensor` is the core component of `nn_lib`, implements application of
 math operations on Tensors, and gradient propagation and accumulation
 * `nn_lib.mdl` contains an interface of a Module class (similar to `torch.nn.Module`)
