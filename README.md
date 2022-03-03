@@ -44,3 +44,38 @@ a synthetically generated 2D toy dataset (`toy_mlp.toy_dataset`), a class for
 training and validating a model (`toy_mlp.model_trainer`) and the main execution
 script (`toy_mlp.train_toy_mlp`) that demonstrates a regular pipeline of solving a
 task using machine learning approach.
+
+
+## Instruction for students
+
+### Setting up
+1. Clone this repository
+2. Create a new private repository for yourself in GitHub
+3. Set up two remotes: the first one for this repo, the second one for your repo
+4. Invite me to the repository, I will review your progress
+
+### Tasks
+
+#### `nn_lib` and MLP implementation
+Methods marked with a comment `TODO: implement me as an exercise` are for you to
+implement. Most of the to-implement functionality is covered by tests inside
+`nn_lib.tests` directory.
+
+Please note  that all the tests should be correct as there  exists an implementation
+that passes all of them. So do not edit the tests unless you are totally sure and
+can prove that there is a bug there.
+
+At the end all the test must pass, but the recommended  order of implementation is the following:
+1. `.forward()` methods for classes inside `nn_lib.math_fns` (`test_tensor_forward.py`)
+2. `.backward()` methods for classes inside `nn_lib.math_fns` (`test_tensor_backward.py`)
+3. modules functionality inside `nn_lib.mdl` (`test_modules.py`)
+4. optimizers functionality inside `nn_lib.optim` (`test_optim.py`)
+5. MLP neural network methods inside `toy_mlp.binary_mlp_classifier.py`
+6. training-related methods inside `toy_mlp.model_trainer.py`
+
+If everything is implemented correctly the toy MLP example should be able to be trained
+successfully reaching 95+ % validation accuracy (`toy_mlp.train_toy_mlp.py`) on all three
+of toy datasets. 
+
+After (1) completion of this part, (2) review of your changes by me and (3) 1:1 discussion for
+checking the understanding, you will receive X points (to be decided).
