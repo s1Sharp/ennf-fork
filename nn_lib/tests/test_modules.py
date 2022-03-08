@@ -3,7 +3,7 @@ import numpy as np
 
 from nn_lib import Tensor
 from nn_lib.mdl import Linear, BCELoss
-from nn_lib.tests.utils import seeded_random, assert_almost_equal
+from nn_lib.tests.utils import seeded_random
 
 
 class TestModules(unittest.TestCase):
@@ -40,7 +40,7 @@ class TestModules(unittest.TestCase):
                 y_true = np.maximum(y_true, 0)
             else:
                 assert activation_fn == 'none'
-            assert_almost_equal(y.data, y_true)
+            np.testing.assert_almost_equal(y.data, y_true, 6)
 
     def test_linear_1(self):
         in_dim, out_dim = 1, 2
@@ -94,60 +94,60 @@ class TestModules(unittest.TestCase):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([0])), Tensor(np.array([1]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, np.log(2))
+        np.testing.assert_almost_equal(loss_value.data, np.log(2), 6)
 
     def test_bce_loss_2(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([1])), Tensor(np.array([1]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, np.log(1 + np.exp(-1)))
+        np.testing.assert_almost_equal(loss_value.data, np.log(1 + np.exp(-1)), 6)
 
     def test_bce_loss_3(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([-1])), Tensor(np.array([1]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, np.log(1 + np.exp(1)))
+        np.testing.assert_almost_equal(loss_value.data, np.log(1 + np.exp(1)), 6)
 
     def test_bce_loss_4(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([0])), Tensor(np.array([0]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, np.log(2))
+        np.testing.assert_almost_equal(loss_value.data, np.log(2), 6)
 
     def test_bce_loss_5(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([1])), Tensor(np.array([0]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, np.log(1 + np.exp(1)))
+        np.testing.assert_almost_equal(loss_value.data, np.log(1 + np.exp(1)), 6)
 
     def test_bce_loss_6(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([-1])), Tensor(np.array([0]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, np.log(1 + np.exp(-1)))
+        np.testing.assert_almost_equal(loss_value.data, np.log(1 + np.exp(-1)), 6)
 
     def test_bce_loss_7(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([0, 2, -2, 0, 2, -2])), Tensor(np.array([0, 0, 0, 1, 1, 1]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, 0.9823344)
+        np.testing.assert_almost_equal(loss_value.data, 0.9823344, 6)
 
     def test_bce_loss_8(self):
         loss = BCELoss(False)
         prediction_logits, targets = Tensor(np.array([0, 2, -2, 0, 2, -2])), Tensor(np.array([0, 0, 0, 1, 1, 1]))
         loss_value = loss(prediction_logits, targets)
         gt_result = np.array([0.6931472, 2.126928, 0.12692785, 0.6931472, 0.12692805, 2.1269279])
-        assert_almost_equal(loss_value.data, gt_result)
+        np.testing.assert_almost_equal(loss_value.data, gt_result, 6)
 
     def test_bce_loss_9(self):
         loss = BCELoss(True)
         prediction_logits, targets = Tensor(np.array([200, -9, -51, 61, 49, -55])), Tensor(np.array([0, 0, 0, 1, 1, 1]))
         loss_value = loss(prediction_logits, targets)
-        assert_almost_equal(loss_value.data, 16.666687)
+        np.testing.assert_almost_equal(loss_value.data, 16.666687, 6)
 
     def test_bce_loss_10(self):
         loss = BCELoss(False)
         prediction_logits, targets = Tensor(np.array([200, -9, -51, 61, 49, -55])), Tensor(np.array([0, 0, 0, 1, 1, 1]))
         loss_value = loss(prediction_logits, targets)
         gt_result = np.array([50, 0.000123024, 0, 0, 0, 50])
-        assert_almost_equal(loss_value.data, gt_result)
+        np.testing.assert_almost_equal(loss_value.data, gt_result, 6)
