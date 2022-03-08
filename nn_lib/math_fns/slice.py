@@ -26,6 +26,7 @@ class Slice(Function):
 
         :return: sliced argument
         """
+        return self.args[0].data[self.slice_obj]
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, ...]:

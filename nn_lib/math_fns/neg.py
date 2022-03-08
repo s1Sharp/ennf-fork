@@ -15,6 +15,7 @@ class Neg(Function):
 
         :return: negative of the argument
         """
+        return np.negative( self.args[0].data)
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:

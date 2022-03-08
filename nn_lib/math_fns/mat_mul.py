@@ -16,6 +16,7 @@ class MatMul(Function):
 
         :return: matrix product of the two arguments
         """
+        return np.matmul( self.args[0].data , self.args[1].data )
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:

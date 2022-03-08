@@ -15,6 +15,7 @@ class Exp(Function):
 
         :return: exponent of the argument
         """
+        return np.exp( self.args[0].data )
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:

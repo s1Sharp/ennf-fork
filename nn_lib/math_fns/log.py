@@ -15,6 +15,7 @@ class Log(Function):
 
         :return: logarithm of the argument
         """
+        return np.log( self.args[0].data )
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:
