@@ -56,7 +56,7 @@ task using machine learning approach.
 
 ### Tasks
 
-#### `nn_lib` and MLP implementation
+#### 
 Methods marked with a comment `TODO: implement me as an exercise` are for you to
 implement. Most of the to-implement functionality is covered by tests inside
 `nn_lib.tests` directory.
@@ -79,3 +79,17 @@ of toy datasets.
 
 After (1) completion of this part, (2) review of your changes by me and (3) 1:1 discussion for
 checking the understanding, you will receive X points (to be decided).
+
+### How to setup environment 
+#### Lunux:
+    python3 -m venv env
+    source env/bin/activate
+    python3 -m pip install -r requirements.txt
+#### Windows:
+    python -m venv env
+    .\env\Scripts\activate.bat
+    python -m pip install -r requirements.txt
+#### For deactivate the Python venv:
+    deactivate
+#### Update requirements
+    pip freeze > requirements.txt
