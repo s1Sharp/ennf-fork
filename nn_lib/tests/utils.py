@@ -1,4 +1,17 @@
+from typing import Union, Iterable
 import numpy as np
+
+
+def assert_almost_equal(a: Union[np.ndarray, Iterable, float, int], b: Union[np.ndarray, Iterable, float, int]) -> None:
+    """
+    Assert whether two values/arrays are equal up to 4 decimal places
+    :param a: the first value to compare
+    :param b: the second value to compare
+    :return: None
+    """
+    a_ = np.array(a, np.float32)
+    b_ = np.array(b, np.float32)
+    np.testing.assert_almost_equal(a_, b_, 4)
 
 
 class seeded_random:
