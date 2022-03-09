@@ -450,7 +450,7 @@ class TestTensorBackward(unittest.TestCase):
         a = Tensor(3.1, requires_grad=True)
         b = F.exp(a)
         b.backward(Tensor(4))
-        self.assertAlmostEqual(a.grad.data, 4*np.exp(3.1), 5)
+        self.assertAlmostEqual(a.grad.data, np.dot(4, np.exp(np.array(3.1, np.float32))), 5)
         self.assertEqual(b.grad.data, 4)
 
     def test_exponent_gradient_vector_1(self):

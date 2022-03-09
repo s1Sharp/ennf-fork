@@ -17,9 +17,7 @@ class Add(Function):
         https://numpy.org/doc/stable/user/basics.broadcasting.html
         :return: sum of the two arguments
         """
-        #return self.args[0].data + self.args[1].data
         return np.add( self.args[0].data , self.args[1].data )
-        raise NotImplementedError   # TODO: implement me as an exercise
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -31,4 +29,4 @@ class Add(Function):
         :param grad_output: gradient over the result of the addition operation
         :return: a tuple of gradients over two addition arguments
         """
-        raise NotImplementedError   # TODO: implement me as an exercise
+        return tuple( [ grad_output , grad_output ] )
