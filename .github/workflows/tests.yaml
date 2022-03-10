@@ -16,5 +16,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run nnlib tests
-        run: python -m unittest discover nn_lib/tests
+      - name: nn_lib tests forward
+        run: python -m unittest nn_lib/tests/test_tensor_forward.py
+      - name: nn_lib tests backward
+        run: python -m unittest nn_lib/tests/test_tensor_backward.py
+      - name: nn_lib tests optim
+        run: python -m unittest nn_lib/tests/test_optim.py
+      - name: nn_lib tests modules
+        run: python -m unittest nn_lib/tests/test_modules.py
