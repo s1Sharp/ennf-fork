@@ -21,4 +21,16 @@ class BCELoss(Loss):
         :return: a loss Tensor; if reduction is True, returns a scalar, otherwise a Tensor of shape (B,) -- loss value
             per batch element
         """
-        raise NotImplementedError   # TODO: implement me as an exercise
+        # l = - (y * log(x) + (1-y) * log(1-x)) 
+        x = F.sigmoid(prediction_logits)
+        y = target
+        ones_Tensor = Tensor(1, requires_grad=True)
+        max_log_Tensor = Tensor(self.MAX_LOG, requires_grad=True)
+        log1 = F.clip(F.log(x), -max_log_Tensor , max_log_Tensor)
+        log2 = F.clip(F.log(ones_Tensor - x), -max_log_Tensor , max_log_Tensor)
+
+        result = -(y * log1 + (ones_Tensor - y) * log2)
+
+        if self.reduce:
+            return F.reduce(result)
+        return result
