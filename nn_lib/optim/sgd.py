@@ -24,4 +24,9 @@ class SGD(Optimizer):
         Update parameters of a model by performing a single gradient descent step
         :return: None
         """
-        raise NotImplementedError   # TODO: implement me as an exercise
+        lr = self.lr
+        wd = self.weight_decay
+        for param in self.parameters:
+            result = (1 - lr * wd) * param.data - lr * param.grad.data
+            param.data = result
+        return
