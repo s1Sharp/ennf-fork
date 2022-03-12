@@ -33,7 +33,11 @@ class Linear(Module):
         :param x: an input of the shape (B, self.in_dim), where B is the batch size
         :return: an output of the layer of the shape (B, self.out_dim), where B is the batch size
         """
-        raise NotImplementedError   # TODO: implement me as an exercise
+        # weight already .T
+        result = F.mat_mul(x , self.weight) + self.bias
+        if self.activation_fn == 'relu':
+            result = F.relu(result)
+        return result
 
     @staticmethod
     def init_parameter(shape: Tuple[int, int], scale: float) -> np.ndarray:
@@ -43,7 +47,8 @@ class Linear(Module):
         :param scale: scale of the parameter
         :return: initialized parameter
         """
-        raise NotImplementedError   # TODO: implement me as an exercise
+        result = np.random.uniform(low=-scale, high=scale, size=shape)
+        return result
 
     def __str__(self):
         result = f'Linear layer: size ({self.in_dim}, {self.out_dim}), activation {self.activation_fn}'
