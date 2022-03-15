@@ -12,7 +12,8 @@ class SGD(Optimizer):
         """
         Create an SGD optimizer
         :param parameters: list of parameters of a model
-        :param lr: learning rate of the optimizer TODO: make non-constant (e.g., by providing a callable function)
+        :param lr: learning rate of the optimizer 
+        # TODO: make non-constant (e.g., by providing a callable function)
         :param weight_decay: a weight decay parameter of the optimizer controlling regularization
         """
         super(SGD, self).__init__(parameters)
@@ -30,3 +31,18 @@ class SGD(Optimizer):
             result = (1 - lr * wd) * param.data - lr * param.grad.data
             param.data = result
         return
+
+    def __call__(self, *args, **kwargs):
+        """
+        A module can additionally be called as a callable object
+        """
+        return self.update_param(*args, **kwargs)
+    
+    def update_param(self, lr, weight_decay: float = 5e-4):
+        self.lr = lr
+        self.weight_decay = weight_decay
+
+    # example
+    # optimazer(lr=0.01, weight_decay=5e-3)
+
+
