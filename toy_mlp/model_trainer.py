@@ -57,6 +57,17 @@ class ModelTrainer(Module):
         :param label_batch: label batch corresponding to the data batch of the shape (B,)
         :return: tuple of two tensors for prediction logits and loss value
         """
+        # Zero you grad for every batch
+        self.optimizer.zero_grad()
+        output = self.model.forward(data_batch)
+
+        loss = self.loss_function.forward(output, label_batch)
+
+        loss.backward()
+
+        self.optimizer.step()
+
+        return tuple([ output , loss ])
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def validate(self, test_dataloader: Dataloader) -> Tuple[np.ndarray, float, float]:
