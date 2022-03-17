@@ -29,7 +29,7 @@ class ModelTrainer(Module):
         :param x: input data batch of the shape (B, in_features)
         :return: prediction logits of the shape (B,)
         """
-        predictions = self.model(x)
+        predictions = self.model.forward(x)
         return predictions
 
     def train(self, train_dataloader: Dataloader, n_epochs: int) -> None:
