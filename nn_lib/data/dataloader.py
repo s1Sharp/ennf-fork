@@ -33,10 +33,10 @@ class Dataloader:
             while dataset_index < dataset_len and len(data_list) < self.batch_size:
                 data, label = self.dataset[permutation[dataset_index]]
                 data_list.append(data)
-                label_list.append(label)
+                label_list.append([label])
                 dataset_index += 1
             data_batch = Tensor(np.stack(data_list))
-            label_batch = Tensor(np.stack(label_list))
+            label_batch = Tensor(np.stack(label_list)) # .reshape(-1,1))
             yield data_batch, label_batch
 
     def __len__(self) -> int:
