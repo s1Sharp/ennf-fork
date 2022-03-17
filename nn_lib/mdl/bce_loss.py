@@ -22,12 +22,14 @@ class BCELoss(Loss):
             per batch element
         """
         # l = - (y * log(x) + (1-y) * log(1-x)) 
-        x = F.sigmoid(prediction_logits)
+        x = prediction_logits
         y = target
-        ones_Tensor = Tensor(1, requires_grad=True)
-        max_log_Tensor = Tensor(self.MAX_LOG, requires_grad=True)
-        log1 = F.clip(F.log(x), -max_log_Tensor , max_log_Tensor)
-        log2 = F.clip(F.log(ones_Tensor - x), -max_log_Tensor , max_log_Tensor)
+        ones_Tensor = Tensor(1, requires_grad=False)
+        max_log_Tensor = Tensor(self.MAX_LOG, requires_grad=False)
+        x = F.clip(x, -max_log_Tensor , max_log_Tensor)
+
+        log1 = -F.log(ones_Tensor+F.exp(-x))
+        log2 = F.log(F.exp(-x)) - F.log(ones_Tensor+F.exp(-x))
 
         result = -(y * log1 + (ones_Tensor - y) * log2)
 
