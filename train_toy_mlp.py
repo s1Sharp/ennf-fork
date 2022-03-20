@@ -44,7 +44,7 @@ def main(n_samples, structure, n_epochs, hidden_layer_sizes):
     print(f'Validation loss: {val_mean_loss:.4f}')
 
     # visualize dataset together with its predictions
-    #val_dataset.visualize(val_predictions)
+    val_dataset.visualize(val_predictions)
 
 
 if __name__ == '__main__':

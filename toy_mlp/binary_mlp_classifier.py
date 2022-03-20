@@ -69,7 +69,7 @@ class BinaryMLPClassifier(Module):
         predictions = x
         for layer in self.layers:
             predictions = layer.forward(predictions)
-        return predictions
+        return predictions[:,0]
         raise NotImplementedError   # TODO: implement me as an exercise
 
     def parameter_count(self) -> int:
