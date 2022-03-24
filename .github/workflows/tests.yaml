@@ -24,3 +24,5 @@ jobs:
         run: python -m unittest nn_lib/tests/test_optim.py
       - name: nn_lib tests modules
         run: python -m unittest nn_lib/tests/test_modules.py
+      - name: nn_lib tests softmax
+        run: python -m unittest nn_lib/tests/test_softmax.py

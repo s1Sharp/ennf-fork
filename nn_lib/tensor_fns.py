@@ -45,6 +45,8 @@ def clip(x: Tensor, lower: Tensor, upper: Tensor) -> Tensor:
     clip_from_above = minimum(clip_from_below, upper)
     return clip_from_above
 
+def softmax(x: Tensor)  -> Tensor:
+    return exp(x) / reduce(exp(x), reduction='sum')
 
 def reduce(x: Tensor, axis: Union[int, Tuple[int, ...], None] = None, reduction: str = 'mean') -> Tensor:
     """
