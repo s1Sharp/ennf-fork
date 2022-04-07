@@ -1,4 +1,5 @@
 from typing import Tuple, Union
+from keras.datasets import mnist
 import numpy as np
 from sklearn import datasets
 import matplotlib.pyplot as plt
@@ -6,14 +7,7 @@ import matplotlib.pyplot as plt
 from nn_lib.data import Dataset
 
 
-DEFAULT_DATASET_PARAMETERS = dict(
-    blobs=dict(centers=np.array([[0, 0], [3, 5]]), cluster_std=np.array([1, 2])),
-    moons=dict(noise=0.1),
-    circles=dict(noise=0.1, factor=0.55)
-)
-
-
-class ToyDataset(Dataset):
+class MnistDataset(Dataset):
     """
     A simple binary classification dataset consisting of two 2D point clusters, each cluster representing a
     classification category; points are artificially generated
@@ -22,34 +16,31 @@ class ToyDataset(Dataset):
         - moons -- clusters represent points from two half circles
         - circles -- clusters represent two circles one inside another
     """
-    def __init__(self, n_samples: int, structure: str = 'blobs', seed: int = 0, **kwargs):
+    def __init__(self, train: bool = True):
         """
-        Create a dataset
-        :param n_samples: total number of points in the dataset split equally among two categories
-        :param structure: arrangement of the points either 'blobs', 'moons' or 'circles'
-        :param seed: random generator seed
-        :param kwargs: optional keyword arguments for the dataset generation
+        Init mnist dataset
         """
-        assert structure in ('blobs', 'moons', 'circles')
-
-        dataset_parameters = {}
-        for k, v in DEFAULT_DATASET_PARAMETERS[structure].items():
-            dataset_parameters[k] = kwargs[k] if k in kwargs else v
-
-        self.n_samples = n_samples
-        self.structure = structure
-        if self.structure == 'blobs':
-            self.data, self.labels = datasets.make_blobs(
-                n_samples=n_samples, n_features=2, random_state=seed, **dataset_parameters)
-        elif self.structure == 'moons':
-            self.data, self.labels = datasets.make_moons(
-                n_samples=n_samples, random_state=seed, **dataset_parameters)
+        if train:
+            # train dataset
+            self.data, self.labels = mnist.load_data()[0]
+            self.data = self.data.reshape(self.data.shape[0], self.data.shape[1] * self.data.shape[2])
+            self.data = self.data.astype('float32')
+            self.data /= 255
         else:
-            self.data, self.labels = datasets.make_circles(
-                n_samples=n_samples, random_state=seed, **dataset_parameters)
+            # test dataset
+            self.data, self.labels = mnist.load_data()[1]
+            self.data = self.data.reshape(self.data.shape[0], self.data.shape[1] * self.data.shape[2])
+            self.data = self.data.astype('float32')
+            self.data /= 255
+        self.n_samples = self.labels.shape[0]
+
+    def label_encode(self, label):
+        result = np.zeros(10)
+        result[label] = 1
+        return result
 
     def __getitem__(self, index: int) -> Tuple[np.ndarray, np.ndarray]:
-        result = self.data[index], self.labels[index]
+        result = self.data[index], self.label_encode(self.labels[index])
         return result
 
     def __len__(self) -> int:
@@ -90,7 +81,7 @@ class ToyDataset(Dataset):
         zz = predict.reshape(xx.shape)
 
         # plot the grid of x, y and z values as a surface
-        plt.contourf(xx, yy, zz, 4)
+        plt.contourf(xx, yy, zz, 1)
         
         positive_mask = self.labels == 1
         if predictions is None:
@@ -126,5 +117,6 @@ class ToyDataset(Dataset):
 if __name__ == '__main__':
     # dataset = ToyDataset(1000, 'blobs')
     # dataset = ToyDataset(1000, 'moons')
-    dataset = ToyDataset(1000, 'circles')
-    dataset.visualize()
+    train_dataset = MnistDataset(train=True)
+    test_dataset = MnistDataset(train=False)
+    #dataset.visualize()

@@ -8,7 +8,7 @@ class SGD(Optimizer):
     """
     Stochastic gradient descent optimizer similar to https://pytorch.org/docs/stable/generated/torch.optim.SGD.html
     """
-    def __init__(self, parameters: List[Tensor], lr, weight_decay: float = 5e-4):
+    def __init__(self, parameters: List[Tensor], lr, weight_decay: float = 5e-4, dynamic_lr:bool = False, lr_decay: float = 9e-1):
         """
         Create an SGD optimizer
         :param parameters: list of parameters of a model
@@ -19,6 +19,8 @@ class SGD(Optimizer):
         super(SGD, self).__init__(parameters)
         self.lr = lr
         self.weight_decay = weight_decay
+        self.lr_decay = lr_decay
+        self.dynamic_lr = dynamic_lr
 
     def step(self) -> None:
         """
@@ -38,11 +40,8 @@ class SGD(Optimizer):
         """
         return self.update_param(*args, **kwargs)
     
-    def update_param(self, lr, weight_decay: float = 5e-4):
-        self.lr = lr
-        self.weight_decay = weight_decay
-
-    # example
-    # optimazer(lr=0.01, weight_decay=5e-3)
+    def update_param(self, n_epoch, global_epoch):
+        if self.dynamic_lr:
+            self.lr = self.lr * self.lr_decay ** (n_epoch/global_epoch)
 
 

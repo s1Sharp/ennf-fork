@@ -29,7 +29,7 @@ class ModelTrainer(Module):
         :param x: input data batch of the shape (B, in_features)
         :return: prediction logits of the shape (B,)
         """
-        predictions = self.model.forward(x)
+        predictions = self.model(x)
         return predictions
 
     def train(self, train_dataloader: Dataloader, n_epochs: int) -> None:
@@ -45,6 +45,8 @@ class ModelTrainer(Module):
                 _, loss_value = self._train_step(data_batch, label_batch)
                 progress_bar.update(1)
                 progress_bar.desc = f'Training. Epoch: {i_epoch + 1}. Loss: {loss_value.data:.4f}'
+            if self.optimizer.dynamic_lr:
+                self.optimizer.update_param(i_epoch, n_epochs)
 
     def _train_step(self, data_batch: Tensor, label_batch: Tensor) -> Tuple[Tensor, Tensor]:
         """
@@ -61,14 +63,19 @@ class ModelTrainer(Module):
         self.optimizer.zero_grad()
         output = self.model.forward(data_batch)
 
-        loss = self.loss_function.forward(output, label_batch)
+        loss = self.loss_function(output, label_batch)
 
         loss.backward()
 
         self.optimizer.step()
 
         return tuple([ output , loss ])
-        raise NotImplementedError   # TODO: implement me as an exercise
+
+        
+    def _get_predicted_classes(self, labels: np.ndarray) -> np.ndarray:
+        return np.apply_along_axis(np.argmax, axis=1, arr=labels)
+
+
 
     def validate(self, test_dataloader: Dataloader) -> Tuple[np.ndarray, float, float]:
         """
@@ -82,17 +89,31 @@ class ModelTrainer(Module):
         predictions = []
         for data_batch, label_batch in tqdm(test_dataloader, desc='Validating'):
             prediction_logit_batch = self.model(data_batch)
-            positive_predictions = prediction_logit_batch.data > 0
-            correct_predictions = positive_predictions == label_batch.data
+
+            if (prediction_logit_batch.data.ndim == 1):
+                positive_predictions = prediction_logit_batch.data > 0
+                correct_predictions = positive_predictions == label_batch.data
+            else:
+                predicted_classes = self._get_predicted_classes(prediction_logit_batch.data)
+                excpected_classes = self._get_predicted_classes(label_batch.data)
+                correct_predictions = predicted_classes == excpected_classes
+
             n_correct_predictions += correct_predictions.sum()
             n_predictions += len(data_batch.data)
 
             loss_value = self.loss_function(prediction_logit_batch, label_batch)
             loss_values_sum += loss_value.data
 
-            predictions.extend(positive_predictions.tolist())
+            if (prediction_logit_batch.data.ndim == 1):
+                predictions.extend(positive_predictions.tolist())
+            else:
+                predictions.extend(predicted_classes.tolist())
 
-        predictions = np.array(predictions, np.bool)
+        if (prediction_logit_batch.data.ndim == 1):
+            predictions = np.array(predictions, np.bool)
+        else:
+            predictions = np.array(predictions, np.uint)
+            
         accuracy = n_correct_predictions / n_predictions
         mean_loss = loss_values_sum / n_predictions
 
