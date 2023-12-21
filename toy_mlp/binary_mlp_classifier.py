@@ -2,7 +2,8 @@ from typing import Union, Tuple, List
 import numpy as np
 
 from nn_lib import Tensor
-from nn_lib.mdl import Module, Linear
+from nn_lib.mdl import Module
+from nn_lib.mdl.layers import Linear
 
 
 class BinaryMLPClassifier(Module):

@@ -1,4 +1,4 @@
-from nn_lib.mdl import BCELoss
+from nn_lib.mdl.loss_functions import BCELoss
 from nn_lib.optim import SGD, Adam, Optimizer
 from nn_lib.data import Dataloader
 

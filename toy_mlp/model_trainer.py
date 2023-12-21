@@ -3,7 +3,8 @@ from tqdm import tqdm
 import numpy as np
 
 from nn_lib import Tensor
-from nn_lib.mdl import Module, Loss
+from nn_lib.mdl import Module
+from nn_lib.mdl.loss_functions import Loss
 from nn_lib.optim import Optimizer
 from nn_lib.data import Dataloader
 

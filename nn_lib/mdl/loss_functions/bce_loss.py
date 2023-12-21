@@ -1,4 +1,4 @@
-from nn_lib.mdl.loss import Loss
+from nn_lib.mdl.loss_functions.loss import Loss
 from nn_lib import Tensor
 import nn_lib.tensor_fns as F
 
