@@ -1,20 +1,20 @@
 from nn_lib.mdl import BCELoss
-from nn_lib.optim import SGD
+from nn_lib.optim import SGD, Adam, Optimizer
 from nn_lib.data import Dataloader
 
 from toy_mlp.model_trainer import ModelTrainer
 from toy_mlp.binary_mlp_classifier import BinaryMLPClassifier
 from toy_mlp.toy_dataset import ToyDataset
+from history_plotter import plot_loss
 
-
-def main(n_samples, structure, n_epochs, hidden_layer_sizes):
+def main(n_samples, structure, n_epochs, hidden_layer_sizes,optim:Optimizer=SGD, visualize=False):
     # create binary MLP classification model
     mlp_model = BinaryMLPClassifier(in_features=2, hidden_layer_sizes=hidden_layer_sizes)
     print(f'Created the following binary MLP classifier:\n{mlp_model}')
     # create loss function
     loss_fn = BCELoss()
     # create optimizer for model parameters
-    optimizer = SGD(mlp_model.parameters(), lr=1e-2, weight_decay=5e-4)
+    optimizer = optim(mlp_model.parameters(), lr=1e-2, weight_decay=5e-4)
 
     # create a model trainer
     model_trainer = ModelTrainer(mlp_model, loss_fn, optimizer)
@@ -44,11 +44,17 @@ def main(n_samples, structure, n_epochs, hidden_layer_sizes):
     print(f'Validation loss: {val_mean_loss:.4f}')
 
     # visualize dataset together with its predictions
-    #val_dataset.visualize(val_predictions)
+    if visualize:
+        val_dataset.visualize(val_predictions)
 
+    #plot_loss(model_trainer.history_loss)
+    return model_trainer.history_loss
 
 if __name__ == '__main__':
     
-    # main(n_samples=1000, structure='blobs', n_epochs=100, hidden_layer_sizes=(20,))
-    main(n_samples=1000, structure='circles', n_epochs=100, hidden_layer_sizes=(100,))
-    # main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(10000,))
+    #main(n_samples=1000, structure='blobs', n_epochs=100, hidden_layer_sizes=(20,))
+    #main(n_samples=1000, structure='circles', n_epochs=100, hidden_layer_sizes=(100,),visualize=True)
+    #main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(10000,),visualize=True)
+    plot_loss([main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(100,), optim=SGD,visualize=True),
+              main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(100,), optim=Adam, visualize=True)],
+              ['SGD','Adam'])

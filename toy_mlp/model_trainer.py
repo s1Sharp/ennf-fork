@@ -12,7 +12,7 @@ class ModelTrainer(Module):
     """
     A helper class for manipulating a neural network training and validation
     """
-    def __init__(self, model: Module, loss_function: Loss, optimizer: Optimizer):
+    def __init__(self, model: Module, loss_function: Loss, optimizer: Optimizer, score_function = None):
         """
         Create a neural network
         :param model: a model to train
@@ -22,6 +22,12 @@ class ModelTrainer(Module):
         self.model = model
         self.loss_function = loss_function
         self.optimizer = optimizer
+        self.score_function = None
+        if score_function:
+            self.score_function = score_function
+
+        self.history_loss = []
+        self.history_score = []
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -45,6 +51,11 @@ class ModelTrainer(Module):
                 _, loss_value = self._train_step(data_batch, label_batch)
                 progress_bar.update(1)
                 progress_bar.desc = f'Training. Epoch: {i_epoch + 1}. Loss: {loss_value.data:.4f}'
+                self.history_loss.append(loss_value.data)
+
+                if self.score_function:
+                    pass    #some scoring stuff
+
 
     def _train_step(self, data_batch: Tensor, label_batch: Tensor) -> Tuple[Tensor, Tensor]:
         """
@@ -97,3 +108,7 @@ class ModelTrainer(Module):
         mean_loss = loss_values_sum / n_predictions
 
         return predictions, accuracy, mean_loss
+
+    @property
+    def history(self) -> list[int]:
+        return self.history_loss
