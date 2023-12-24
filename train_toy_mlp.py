@@ -4,7 +4,7 @@ from nn_lib.data import Dataloader
 
 from toy_mlp.model_trainer import ModelTrainer
 from toy_mlp.binary_mlp_classifier import BinaryMLPClassifier
-from toy_mlp.toy_dataset import ToyDataset
+from toy_mlp.toy_dataset_binary import ToyDataset
 
 
 def main(n_samples, structure, n_epochs, hidden_layer_sizes):

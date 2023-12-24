@@ -4,7 +4,7 @@ from nn_lib.data import Dataloader
 
 from toy_mlp.model_trainer import ModelTrainer
 from toy_mlp.binary_mlp_classifier import BinaryMLPClassifier
-from toy_mlp.toy_dataset import ToyDataset
+from toy_mlp.toy_dataset_binary import ToyDatasetBinary
 from history_plotter import plot_loss
 
 def main(n_samples, structure, n_epochs, hidden_layer_sizes,optim:Optimizer=SGD, visualize=False):
@@ -20,9 +20,9 @@ def main(n_samples, structure, n_epochs, hidden_layer_sizes,optim:Optimizer=SGD,
     model_trainer = ModelTrainer(mlp_model, loss_fn, optimizer)
 
     # generate a training dataset
-    train_dataset = ToyDataset(n_samples=n_samples, structure=structure, seed=0)
+    train_dataset = ToyDatasetBinary(n_samples=n_samples, structure=structure, seed=0)
     # generate a validation dataset different from the training dataset
-    val_dataset = ToyDataset(n_samples=n_samples, structure=structure, seed=1)
+    val_dataset = ToyDatasetBinary(n_samples=n_samples, structure=structure, seed=1)
     # create a dataloader for training data with shuffling and dropping last batch
     train_dataloader = Dataloader(train_dataset, batch_size=100, shuffle=True, drop_last=True)
     # create a dataloader for validation dataset without shuffling or last batch dropping

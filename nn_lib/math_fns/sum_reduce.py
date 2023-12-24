@@ -30,7 +30,7 @@ class SumReduce(Function):
 
         :return: the reduced value
         """
-        return np.sum( self.args[0].data , axis = self.axis)
+        return np.sum(self.args[0].data , axis = self.axis)
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, ...]:
         """
