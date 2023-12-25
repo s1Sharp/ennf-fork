@@ -39,14 +39,13 @@ def relu(x: Tensor) -> Tensor:
     result = maximum(x, Tensor(0))
     return result
 
-
 def clip(x: Tensor, lower: Tensor, upper: Tensor) -> Tensor:
     clip_from_below = maximum(lower, x)
     clip_from_above = minimum(clip_from_below, upper)
     return clip_from_above
 
 
-def reduce(x: Tensor, axis: Union[int, Tuple[int, ...], None] = None, reduction: str = 'mean') -> Tensor:
+def reduce(x: Tensor, axis: Union[int, Tuple[int, ...], None] = None, reduction: str = 'mean', keepdims: bool = False) -> Tensor:
     """
     Apply reduction to a Tensor
     :param x: Tensor to be reduced
@@ -63,9 +62,14 @@ def reduce(x: Tensor, axis: Union[int, Tuple[int, ...], None] = None, reduction:
         axis = (axis,)
 
     # first reduce by summation
-    result = Tensor.apply_fn(SumReduce, x, axis=axis)
+    result = Tensor.apply_fn(SumReduce, x, axis=axis, keepdims=keepdims)
     if reduction == 'mean':
         # if reduction is 'mean' divide result by the total size of reduced axes
         denominator = np.prod(tuple(map(lambda i: shape[i], axis)))
         result = result / Tensor(denominator)
     return result
+
+
+
+def softmax(x: Tensor) -> Tensor:
+    return exp(x) / reduce(exp(x), axis=0, reduction='sum')

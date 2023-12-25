@@ -9,7 +9,7 @@ class SumReduce(Function):
     Summation reduction over given axis (or axes)
     """
 
-    def __init__(self, *args, axis: Union[int, Tuple[int, ...], None] = None):
+    def __init__(self, *args, axis: Union[int, Tuple[int, ...], None] = None, keepdims: bool = False):
         """
         Create sum reduction function
 
@@ -30,7 +30,7 @@ class SumReduce(Function):
 
         :return: the reduced value
         """
-        return np.sum(self.args[0].data , axis = self.axis)
+        return np.sum(self.args[0].data , axis = self.axis, keepdims=True)
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, ...]:
         """
@@ -41,5 +41,5 @@ class SumReduce(Function):
         :return: a tuple with a single value representing the gradient over the reduction argument
         """
 
-        result = np.multiply( np.ones_like( self.args[0].data ), grad_output )
+        result = np.multiply(np.ones_like( self.args[0].data ), grad_output )
         return tuple ([ result ])

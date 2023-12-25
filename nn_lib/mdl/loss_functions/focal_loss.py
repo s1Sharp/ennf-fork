@@ -3,10 +3,10 @@ from nn_lib import Tensor
 import nn_lib.tensor_fns as F
 
 
-class CELoss(Loss):
+class FocalLoss(Loss):
     """
-    Cross entropy loss
-    Similar to this https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
+    Focal loss
+    Similar to this https://arxiv.org/pdf/1708.02002.pdf
     """
 
     # In order to avoid over- or underflow we clip prediction logits into [-MAX_LOG, MAX_LOG]
@@ -21,14 +21,19 @@ class CELoss(Loss):
         :return: a loss Tensor; if reduction is True, returns a scalar, otherwise a Tensor of shape (B,) -- loss value
             per batch element
         """
-        x = prediction_logits
-        y = target
+        eps = Tensor(1e-8, requires_grad=False)
+        one = Tensor(1, requires_grad=False)
 
-        x = F.clip(x, Tensor(-self.MAX_LOG, True), Tensor(self.MAX_LOG, True))
-        ax = 1
-        result = F.log(F.reduce(F.exp(x), axis=ax, reduction='sum', keepdims=True)) - \
-                 F.reduce(x * y, axis=ax,reduction='sum', keepdims=True)
+        y = F.sigmoid(prediction_logits) + eps
+        # :TODO implement F.pow(x,y) and (1 - y) ** gamma
+        loss = - ((one - y) * (one - y) * target * F.log(y) + (one - target) * F.log(one - y))
+        return loss
 
-        if self.reduce:
-            return F.reduce(result)
-        return result
+
+'''
+def focal_loss(y_pred, y_real, eps = 1e-8, gamma = 2):
+    y =  y_pred.sigmoid() + eps
+    loss = -((1 - y) ** gamma * y_real * y.log() + (1 - y_real) * (1 - y).log())
+    return loss.mean()
+
+'''

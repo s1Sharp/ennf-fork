@@ -1,28 +1,30 @@
-from nn_lib.mdl.loss_functions import BCELoss
+from nn_lib.mdl.loss_functions import CELoss
 from nn_lib.optim import SGD, Adam, Optimizer
 from nn_lib.data import Dataloader
 
 from toy_mlp.model_trainer import ModelTrainer
-from toy_mlp.binary_mlp_classifier import BinaryMLPClassifier
-from toy_mlp.toy_dataset_binary import ToyDatasetBinary
-from history_plotter import plot_loss
+from toy_mlp.multiple_toy_mlp.multiple_mlp_classifier import MultipleMLPClassifier
+from toy_mlp.multiple_toy_mlp.toy_dataset_multiple import ToyDatasetMultiple
+from toy_mlp.history_plotter import plot_loss
 
-def main(n_samples, structure, n_epochs, hidden_layer_sizes,optim:Optimizer=SGD, visualize=False):
+from nn_lib.scheduler.multi_step_lr import  MultiStepLR
+
+def main(n_samples, structure, n_epochs, hidden_layer_sizes,optim:Optimizer=Adam,milestones=[], visualize=False):
     # create binary MLP classification model
-    mlp_model = BinaryMLPClassifier(in_features=2, hidden_layer_sizes=hidden_layer_sizes)
+    mlp_model = MultipleMLPClassifier(in_features=2, hidden_layer_sizes=hidden_layer_sizes)
     print(f'Created the following binary MLP classifier:\n{mlp_model}')
     # create loss function
-    loss_fn = BCELoss()
+    loss_fn = CELoss()
     # create optimizer for model parameters
     optimizer = optim(mlp_model.parameters(), lr=1e-2, weight_decay=5e-4)
-
+    scheduler = MultiStepLR(optimizer,milestones=milestones,gamma=0.5)
     # create a model trainer
-    model_trainer = ModelTrainer(mlp_model, loss_fn, optimizer)
+    model_trainer = ModelTrainer(mlp_model, loss_fn, optimizer,scheduler=scheduler)
 
     # generate a training dataset
-    train_dataset = ToyDatasetBinary(n_samples=n_samples, structure=structure, seed=0)
+    train_dataset = ToyDatasetMultiple(n_samples=n_samples, structure=structure, classes=4, seed=0)
     # generate a validation dataset different from the training dataset
-    val_dataset = ToyDatasetBinary(n_samples=n_samples, structure=structure, seed=1)
+    val_dataset = ToyDatasetMultiple(n_samples=n_samples, structure=structure, classes=4,  seed=20)
     # create a dataloader for training data with shuffling and dropping last batch
     train_dataloader = Dataloader(train_dataset, batch_size=100, shuffle=True, drop_last=True)
     # create a dataloader for validation dataset without shuffling or last batch dropping
@@ -34,14 +36,14 @@ def main(n_samples, structure, n_epochs, hidden_layer_sizes,optim:Optimizer=SGD,
     # validate model on the train data
     # Note: we create a new dataloader without shuffling or last batch dropping
     train_predictions, train_accuracy, train_mean_loss = model_trainer.validate(
-        Dataloader(train_dataset, batch_size=100, shuffle=False, drop_last=False))
+        Dataloader(train_dataset, batch_size=100, shuffle=False, drop_last=False),multiclass=True)
     print(f'Train accuracy: {train_accuracy:.4f}')
-    print(f'Train loss: {train_mean_loss:.4f}')
+    print(f'Train loss: {train_mean_loss.item():.4f}')
 
     # validate model on the validation data
-    val_predictions, val_accuracy, val_mean_loss = model_trainer.validate(val_dataloader)
+    val_predictions, val_accuracy, val_mean_loss = model_trainer.validate(val_dataloader,multiclass=True)
     print(f'Validation accuracy: {val_accuracy:.4f}')
-    print(f'Validation loss: {val_mean_loss:.4f}')
+    print(f'Validation loss: {val_mean_loss.item():.4f}')
 
     # visualize dataset together with its predictions
     if visualize:
@@ -55,6 +57,5 @@ if __name__ == '__main__':
     #main(n_samples=1000, structure='blobs', n_epochs=100, hidden_layer_sizes=(20,))
     #main(n_samples=1000, structure='circles', n_epochs=100, hidden_layer_sizes=(100,),visualize=True)
     #main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(10000,),visualize=True)
-    plot_loss([main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(100,), optim=SGD,visualize=True),
-              main(n_samples=1000, structure='moons', n_epochs=100, hidden_layer_sizes=(100,), optim=Adam, visualize=True)],
-              ['SGD','Adam'])
+    plot_loss([main(n_samples=30000, structure='circles', n_epochs=5, hidden_layer_sizes=(100,100,4), optim=Adam,milestones=[500], visualize=True)],
+              ['lloos'])

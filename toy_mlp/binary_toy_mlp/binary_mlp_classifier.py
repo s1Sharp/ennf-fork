@@ -44,7 +44,6 @@ class BinaryMLPClassifier(Module):
 
         self._add_layer(self.hidden_layer_sizes[-1], 1, 'none')
         return
-        raise NotImplementedError   # TODO: implement me as an exercise
 
     def _add_layer(self, in_dim: int, out_dim: int, activation_fn: str) -> None:
         """
@@ -58,7 +57,6 @@ class BinaryMLPClassifier(Module):
         self._parameters.append(self.layers[-1].weight)
         self._parameters.append(self.layers[-1].bias)
         return
-        raise NotImplementedError   # TODO: implement me as an exercise
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -71,7 +69,6 @@ class BinaryMLPClassifier(Module):
         for layer in self.layers:
             predictions = layer.forward(predictions)
         return predictions[:,0]
-        raise NotImplementedError   # TODO: implement me as an exercise
 
     def parameter_count(self) -> int:
         """

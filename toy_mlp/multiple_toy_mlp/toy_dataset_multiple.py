@@ -88,22 +88,18 @@ class ToyDatasetMultiple(Dataset):
 
         else:
             for i in range(self.classes):
-                lbl = np.zeros(shape=(self.classes,1),dtype=np.uint8)
-                lbl[i] = 1
-                positive_mask = self.labels == lbl
-                pred_positive_mask = predictions == lbl
+                lbl = np.zeros(shape=(self.classes),dtype=np.float64)
+                lbl[i] = 1.0
+                positive_mask = np.logical_and.reduce(self.labels == lbl, axis=1)
+                pred_positive_mask = np.array(predictions) == i
                 tp_mask = positive_mask & pred_positive_mask
-                tn_mask = (~positive_mask) & (~pred_positive_mask)
+
                 fp_mask = (~positive_mask) & pred_positive_mask
-                fn_mask = positive_mask & (~pred_positive_mask)
+
                 plt.scatter(self.data[tp_mask][:, 0], self.data[tp_mask][:, 1],
-                            label='tp' + str(i))
-                plt.scatter(self.data[tn_mask][:, 0], self.data[tn_mask][:, 1],
-                            label='tn' + str(i))
+                            label='tp'+str(i))
                 plt.scatter(self.data[fp_mask][:, 0], self.data[fp_mask][:, 1],
-                            label='fp' + str(i))
-                plt.scatter(self.data[fn_mask][:, 0], self.data[fn_mask][:, 1],
-                            label='fn' + str(i))
+                            label='fp'+str(i))
 
         plt.legend(loc='best')
         plt.tight_layout()
@@ -114,7 +110,7 @@ class ToyDatasetMultiple(Dataset):
 
 
 if __name__ == '__main__':
-    #dataset = ToyDatasetMultiple(1000, 'blobs',classes=9)
+    dataset = ToyDatasetMultiple(1000, 'blobs',classes=4)
     #dataset = ToyDatasetMultiple(10000, 'moons',classes=9)
-    dataset = ToyDatasetMultiple(10000, 'circles',classes=9)
+    #dataset = ToyDatasetMultiple(10000, 'circles',classes=4)
     dataset.visualize()

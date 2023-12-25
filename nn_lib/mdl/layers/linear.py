@@ -18,7 +18,7 @@ class Linear(Module):
         :param out_dim: number of output dimensions of the layer
         :param activation_fn: activation function to apply after linear transformation, either 'relu' or 'none'
         """
-        assert activation_fn in ('relu', 'none')
+        assert activation_fn in ('relu', 'none','sigmoid')
         self.in_dim = in_dim
         self.out_dim = out_dim
         self.activation_fn = activation_fn
@@ -37,6 +37,8 @@ class Linear(Module):
         result = F.mat_mul(x , self.weight) + self.bias
         if self.activation_fn == 'relu':
             result = F.relu(result)
+        elif self.activation_fn == 'sigmoid':
+            result = F.sigmoid(result)
         return result
 
     @staticmethod
