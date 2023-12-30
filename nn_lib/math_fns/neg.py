@@ -15,7 +15,7 @@ class Neg(Function):
 
         :return: negative of the argument
         """
-        return np.negative( self.args[0].data )
+        return np.negative(self.args[0].data)
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:
         """
@@ -24,4 +24,4 @@ class Neg(Function):
         :param grad_output: gradient over the result of the negation
         :return: a tuple with a single value representing the gradient over the negation argument
         """
-        return tuple( [np.negative( grad_output )])
+        return tuple([np.negative(grad_output)])

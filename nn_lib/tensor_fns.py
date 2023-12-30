@@ -2,7 +2,7 @@ from typing import Union, Tuple
 import numpy as np
 
 from nn_lib import Tensor
-from nn_lib.math_fns import Log, Exp, MatMul, SumReduce, Max, Min
+from nn_lib.math_fns import Log, Exp, MatMul, SumReduce, Max, Min, Sqrt, Pow2
 
 
 def maximum(x: Tensor, y: Tensor) -> Tensor:
@@ -72,4 +72,13 @@ def reduce(x: Tensor, axis: Union[int, Tuple[int, ...], None] = None, reduction:
 
 
 def softmax(x: Tensor) -> Tensor:
-    return exp(x) / reduce(exp(x), axis=0, reduction='sum')
+    result = exp(x) / reduce(exp(x), axis=0, reduction='sum')
+    return result
+
+def sqrt(x: Tensor) -> Tensor:
+    result = Tensor.apply_fn(Sqrt, x)
+    return result
+
+def pow2(x: Tensor) -> Tensor:
+    result = Tensor.apply_fn(Pow2, x)
+    return result

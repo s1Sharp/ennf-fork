@@ -11,3 +11,5 @@ from nn_lib.math_fns.sum_reduce import SumReduce
 from nn_lib.math_fns.max import Max
 from nn_lib.math_fns.min import Min
 from nn_lib.math_fns.slice import Slice
+from nn_lib.math_fns.sqrt import Sqrt
+from nn_lib.math_fns.pow2 import Pow2

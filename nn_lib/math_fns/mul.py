@@ -18,7 +18,7 @@ class Mul(Function):
 
         :return: product of the two arguments
         """
-        return np.multiply( self.args[0].data, self.args[1].data )
+        return np.multiply(self.args[0].data, self.args[1].data)
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -30,4 +30,4 @@ class Mul(Function):
         :param grad_output: gradient over the result of the multiplication operation
         :return: a tuple of gradients over two multiplication arguments
         """
-        return tuple( [grad_output * self.args[1].data , grad_output * self.args[0].data] )
+        return tuple([grad_output * self.args[1].data, grad_output * self.args[0].data])
