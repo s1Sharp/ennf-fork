@@ -6,7 +6,7 @@ from toy_mlp.model_trainer import ModelTrainer
 from toy_mlp.mnist_classifier.mnist_mlp_classifier import MnistMLPClassifier
 from toy_mlp.mnist_classifier.mnist_dataset import MnistDataset
 from toy_mlp.history_plotter import plot_loss
-from nn_lib.mdl.layers import LinearL, Relu
+from nn_lib.mdl.layers import LinearL, Relu, BatchNorm1d
 
 from nn_lib.scheduler.multi_step_lr import MultiStepLR
 
@@ -49,7 +49,7 @@ def main(n_epochs, layers, optim: Optimizer = Adam, milestones=[], visualize=Fal
 
     # visualize dataset together with its predictions
     if visualize:
-        val_dataset.visualize(val_predictions,show_positive=True)
+        val_dataset.visualize(val_predictions,show_positive=False,number=2)
 
     # plot_loss(model_trainer.history_loss)
     return model_trainer.history_loss
@@ -57,11 +57,20 @@ def main(n_epochs, layers, optim: Optimizer = Adam, milestones=[], visualize=Fal
 
 if __name__ == '__main__':
 
-    plot_loss([main(n_epochs=5,
+    plot_loss([main(n_epochs=6,
                     layers=[LinearL(in_dim=784,out_dim=128),
+                            BatchNorm1d(out_features=128),
                             Relu(),
                             LinearL(in_dim=128, out_dim=10)
                             ],
                     optim=Adam,
-                    milestones=[500], visualize=True)],
-              ['lloos'])
+                    milestones=[500], visualize=True),
+               main(n_epochs=6,
+                    layers=[LinearL(in_dim=784, out_dim=128),
+                            Relu(),
+                            LinearL(in_dim=128, out_dim=10)
+                            ],
+                    optim=Adam,
+                    milestones=[500], visualize=True)
+               ],
+              ['batchNorm','NoBatchNorm'])

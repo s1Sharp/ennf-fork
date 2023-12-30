@@ -2,7 +2,7 @@ from typing import Tuple
 from tqdm import tqdm
 import numpy as np
 
-from nn_lib import Tensor
+from nn_lib import Tensor, SetGrad
 from nn_lib.mdl import Module
 from nn_lib.mdl.loss_functions import Loss
 from nn_lib.optim import Optimizer
@@ -105,6 +105,8 @@ class ModelTrainer(Module):
         :param test_dataloader: data to validate on
         :return: a tuple for binary predictions, accuracy of the model and mean loss of the model
         """
+        SetGrad.disable_grad()
+
         n_correct_predictions = 0
         n_predictions = 0
         loss_values_sum = 0
@@ -131,6 +133,8 @@ class ModelTrainer(Module):
 
         accuracy = n_correct_predictions / n_predictions
         mean_loss = loss_values_sum / n_predictions
+
+        SetGrad.enable_grad()
 
         return predictions, accuracy, mean_loss
 

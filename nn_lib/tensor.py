@@ -1,9 +1,42 @@
 from __future__ import annotations
+#from grad_modifier import SetGrad
 from typing import Union, Type, Iterable, Tuple
 import numpy as np
 
 from nn_lib.math_fns import Function, Add, Mul, Neg, Inv, Slice
 
+class SetGrad():
+    # :TODO this class should be moved in other file!
+    _mode: bool = True
+    def __init__(self, mode: bool = True) -> None:
+        self._prev = mode
+        SetGrad._mode = mode
+
+    def __enter__(self) -> None:
+        self.disable_grad()
+
+    def __exit__(self) -> None:
+        self.enable_grad()
+
+    def _disable_grad(self) -> None:
+        self._prev = self.mode
+        self.mode = False
+
+    def _enable_grad(self) -> None:
+        self._prev = self.mode
+        self.mode = True
+
+    @staticmethod
+    def disable_grad() -> None:
+        SetGrad.mode = False
+
+    @staticmethod
+    def enable_grad() -> None:
+        SetGrad.mode = True
+
+    @staticmethod
+    def is_grad_enabled() -> bool:
+        return SetGrad._mode
 
 class Tensor:
     """
@@ -83,7 +116,10 @@ class Tensor:
         result_data = fn.forward()  # type: np.ndarray
         # the resulting Tensor requires gradient computation if any of the arguments that participated in its
         # computation require gradient, otherwise it would not be possible for gradient to flow to these arguments
-        result_requires_grad = any(map(lambda arg: arg.requires_grad, args))
+        result_requires_grad = False
+        if SetGrad.is_grad_enabled():
+            result_requires_grad = any(map(lambda arg: arg.requires_grad, args))
+
         result = Tensor(result_data, requires_grad=result_requires_grad)
         if result_requires_grad:
             result.grad_fn = fn

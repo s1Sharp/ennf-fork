@@ -2,8 +2,7 @@ from typing import Tuple, Union
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle,gzip
-
+import pickle, gzip
 
 from nn_lib.data import Dataset
 
@@ -13,7 +12,8 @@ class MnistDataset(Dataset):
     A simple MNIST classification dataset consisting of ten digits
 
     """
-    def __init__(self, ds_type : str = 'test'):
+
+    def __init__(self, ds_type: str = 'test'):
         """
         Init mnist dataset
         """
@@ -55,7 +55,8 @@ class MnistDataset(Dataset):
     def from2dTo1d(self):
         self.data = self.data.reshape(self.data.shape[0], self.data.shape[1] * self.data.shape[2])
 
-    def visualize(self, predictions: Union[np.ndarray, None] = None, number:int=-1, show_positive: bool = True) -> None:
+    def visualize(self, predictions: Union[np.ndarray, None] = None, number: int = -1,
+                  show_positive: bool = True) -> None:
         """
         Helper method for visualizing data points with and without predictions
         If predictions are not passed, visualizes points coloring positive and negative categories differently
@@ -72,14 +73,13 @@ class MnistDataset(Dataset):
             mask = self.plainLabels == predictions
 
             if show_positive:
-                if 0 <= number and number <= 9:
+                if 0 <= number <= 9:
                     mask = (self.plainLabels == number) == mask
             else:
-                if 0 <= number and number <= 9:
-                    mask = (self.plainLabels == number) == mask
+                if 0 <= number <= 9:
+                    mask = (self.plainLabels == number) == (self.plainLabels != predictions)
                 else:
                     mask = self.plainLabels != predictions
-
 
         for i in range(9):
             plt.subplot(3, 3, i + 1)
