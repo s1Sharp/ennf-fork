@@ -6,7 +6,7 @@ import numpy as np
 from nn_lib.math_fns import Function, Add, Mul, Neg, Inv, Slice
 
 class SetGrad():
-    # :TODO this class should be moved in other file!
+    # :TODO this class should be moved in another file!
     _mode: bool = True
     def __init__(self, mode: bool = True) -> None:
         self._prev = mode

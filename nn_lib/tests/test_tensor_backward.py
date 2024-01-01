@@ -718,6 +718,22 @@ class TestTensorBackward(unittest.TestCase):
         for t_x, tt_x in zip((t_a, t_b, t_c, t_d), (tt_a, tt_b, tt_c, tt_d)):
             np.testing.assert_almost_equal(tt_x.grad.numpy(), t_x.grad.data, 5)
 
+    def test_concat_1(self):
+        a, b = torch.tensor(np.ones((100,128)), requires_grad=True), torch.tensor(np.ones((100,128))/2, requires_grad=True)
+        c = torch.cat([a,b],1)
+        d = torch.sin(c)
+        d.backward()
+        self.assertEqual(1, 1)
+
+    def test_conv_1(self):
+        a = torch.tensor(np.ones((1,1,30,30)), requires_grad=True)
+        conv = torch.conv2d(1,1)
+        filters = torch.randn(8, 4, 3, 3)
+        c = torch.conv2d(a,filters,padding=1)
+        d = torch.sin(c)
+        d.backward()
+        self.assertEqual(1, 1)
+
 
 def tt_create(x):
     t = torch.from_numpy(np.array(x, np.float32))

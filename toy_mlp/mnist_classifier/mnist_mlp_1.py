@@ -57,20 +57,20 @@ def main(n_epochs, layers, optim: Optimizer = Adam, milestones=[], visualize=Fal
 
 if __name__ == '__main__':
 
-    plot_loss([main(n_epochs=6,
+    plot_loss([main(n_epochs=5,
                     layers=[LinearL(in_dim=784,out_dim=128),
                             BatchNorm1d(out_features=128),
                             Relu(),
                             LinearL(in_dim=128, out_dim=10)
                             ],
                     optim=Adam,
-                    milestones=[500], visualize=True),
-               main(n_epochs=6,
+                    milestones=[10], visualize=True),
+               main(n_epochs=5,
                     layers=[LinearL(in_dim=784, out_dim=128),
                             Relu(),
                             LinearL(in_dim=128, out_dim=10)
                             ],
                     optim=Adam,
-                    milestones=[500], visualize=True)
+                    milestones=[10], visualize=True)
                ],
               ['batchNorm','NoBatchNorm'])
