@@ -23,7 +23,7 @@ class Conv2d(Module):
 
     def forward(self, x: Tensor) -> Tensor:
         # :TODO multiple conv cores
-        result = F.conv2d(x,self.W,stride=self.stride,padding=self.padding)
+        result = F.conv2d(x,self.W,stride=self.stride,padding=self.padding) + self.b
         return result
 
     def init_parameter(shape: Tuple[int, int], scale: float) -> np.ndarray:

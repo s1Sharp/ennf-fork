@@ -7,53 +7,69 @@ import pickle, gzip
 from nn_lib.data import Dataset
 
 
-class MnistDataset(Dataset):
+class CIFAR10(Dataset):
     """
-    A simple MNIST classification dataset consisting of ten digits
+    A simple CIFAR10 classification dataset consisting of ten digits
 
     """
-
     def __init__(self, ds_type: str = 'test'):
         """
         Init mnist dataset
         """
         # open a file, where you stored the pickled data
-        assert ds_type in ('test', 'val', 'train')
+        assert ds_type in ('val', 'train')
 
-        file = open('mnist.pkl', 'rb')
+        self.path = r'cifar-10-batches-py/'
+        self.file:str
+        self.data: np.ndarray
+        self.labels: np.ndarray
+        self.n_samples:int = 10000
+        self.batch_num = 1
 
+        self.ds_type = ds_type
         # dump information to that file
-        data = pickle.load(file, encoding='latin1')
-        k = 0
         if ds_type == 'train':
-            # train dataset
-            k = 0
-        elif ds_type == 'test':
-            # test dataset
-            k = 2
+            self.file = 'data_batch_'
+
         elif ds_type == 'val':
-            k = 1
-        self.data, self.labels = data[k]
-        self.n_samples = self.labels.shape[0]
-        self.label_to_one_hot_ecoding()
+            self.file = 'test_batch'
+            self._load_batch()
+
+
+
+    def _load_batch(self):
+        full_path = self.path + self.file
+        if self.ds_type == 'train':
+            full_path += str(self.batch_num)
+            self.batch_num += 1
+
+        with open(full_path, 'rb') as fo:
+            dict = pickle.load(fo, encoding='bytes')
+        self.data, self.labels = dict[b'data'], np.array(dict[b'labels'])
+        self.n_samples = len(self.labels)
+        self.data = self.from1dTo2d()
+        self.labels = self.label_to_one_hot_ecoding()
 
     def label_to_one_hot_ecoding(self):
         self.plainLabels = self.labels
         ohe = OneHotEncoder()
-        self.labels = ohe.fit_transform(self.labels.reshape(-1, 1)).toarray()
+        return ohe.fit_transform(self.labels.reshape(-1, 1)).toarray()
 
     def __getitem__(self, index: int) -> Tuple[np.ndarray, np.ndarray]:
+        if self.ds_type == 'train':
+            if index >= self.n_samples * (self.batch_num-1):
+                self._load_batch()
+        index = index - self.n_samples*(self.batch_num-1)
         result = self.data[index], self.labels[index]
         return result
 
     def __len__(self) -> int:
+        if self.ds_type == 'train':
+            return self.n_samples * 5
         return self.n_samples
 
     def from1dTo2d(self):
-        self.data = self.data.reshape(self.data.shape[0], 28, 28)
-
-    def from2dTo1d(self):
-        self.data = self.data.reshape(self.data.shape[0], self.data.shape[1] * self.data.shape[2])
+        return np.moveaxis(self.data.reshape((self.n_samples,3,32,32)),1,-1)
 
     def visualize(self, predictions: Union[np.ndarray, None] = None, number: int = -1,
                   show_positive: bool = True) -> None:
@@ -83,7 +99,7 @@ class MnistDataset(Dataset):
 
         for i in range(9):
             plt.subplot(3, 3, i + 1)
-            plt.imshow(self.data[mask][i].reshape(28, 28), cmap='gray', interpolation='nearest')
+            plt.imshow(self.data[mask][i], interpolation='nearest')
             if predictions is None:
                 plt.title("Class {}".format(self.plainLabels[mask][i]))
             if predictions:
@@ -100,5 +116,6 @@ class MnistDataset(Dataset):
 if __name__ == '__main__':
     # dataset = ToyDataset(1000, 'blobs')
     # dataset = ToyDataset(1000, 'moons')
-    train_dataset = MnistDataset(ds_type='train')
+    train_dataset = CIFAR10(ds_type='train')
+    data, label = next(iter(train_dataset))
     train_dataset.visualize()

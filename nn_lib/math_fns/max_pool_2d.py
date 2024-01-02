@@ -11,7 +11,7 @@ class MaxPool2d(Function):
     """
     max pooling of activation map
     """
-
+    # :TODO add jit and return indicies
 #    @numba.jit
     def forward(self) -> np.ndarray:
         """
