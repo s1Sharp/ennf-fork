@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def conv_single_step(a_slice_prev, W, b):
+def conv_single_step(a_slice_prev, W):
     """
     Apply one filter defined by parameters W on a single slice (a_slice_prev) of the output activation
     of the previous layer.
@@ -20,8 +20,6 @@ def conv_single_step(a_slice_prev, W, b):
     s = np.multiply(a_slice_prev, W)
     # Sum over all entries of the volume s.
     Z = np.sum(s)
-    # Add bias b to Z. Cast b to a float() so that Z results in a scalar value.
-    Z = Z + float(b)
     ### END CODE HERE ###
 
     return Z

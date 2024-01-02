@@ -39,8 +39,8 @@ class MaxPool2d(Function):
         (m, n_H_prev, n_W_prev, n_C_prev) = self.args[0].data.shape
 
         # Retrieve hyperparameters from "hparameters"
-        stride = self.args[1].data.item()
-        sliding_window_size = self.args[2].data.item()
+        stride = self.kwargs['stride']
+        sliding_window_size = self.kwargs['sliding_window_size']
 
 
         # Define the dimensions of the output

@@ -18,7 +18,7 @@ class Concat2d(Function):
         https://numpy.org/doc/stable/user/basics.broadcasting.html
         :return: sum of the two arguments
         """
-        return np.concatenate(self.args[0].data , self.args[1].data,axis=1)
+        return np.concatenate(self.args[0].data, self.args[1].data, axis=self.kwargs['axis'])
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """

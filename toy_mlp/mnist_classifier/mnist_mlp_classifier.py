@@ -16,7 +16,6 @@ class MnistMLPClassifier(Module):
         :param in_features: number of feature in the input data
         :param hidden_layer_sizes: number of neurons in hidden layers of MLP
         """
-
         self._parameters = []
         self.layers = layers
         self._fill_parameters()

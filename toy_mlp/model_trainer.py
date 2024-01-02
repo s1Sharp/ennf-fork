@@ -97,7 +97,6 @@ class ModelTrainer(Module):
         self.optimizer.step()
 
         return tuple([ output , loss ])
-        raise NotImplementedError   # TODO: implement me as an exercise
 
     def validate(self, test_dataloader: Dataloader,multiclass=False) -> Tuple[np.ndarray, float, float]:
         """

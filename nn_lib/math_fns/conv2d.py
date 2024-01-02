@@ -11,8 +11,6 @@ class Conv2d(Function):
     """
     Addition of two elements
     """
-    stride: int = 2
-    pad: int = 1
     def forward(self) -> np.ndarray:
         """
 
@@ -27,8 +25,9 @@ class Conv2d(Function):
         Arguments:
         A_prev -- output activations of the previous layer, numpy array of shape (m, n_H_prev, n_W_prev, n_C_prev)
         W -- Weights, numpy array of shape (f, f, n_C_prev, n_C)
-        b -- Biases, numpy array of shape (1, 1, 1, n_C)
-        hparameters -- python dictionary containing "stride" and "pad"
+        *deleted* b -- Biases, numpy array of shape (1, 1, 1, n_C)
+        
+        kwargs -- python dictionary containing "stride" and "pad"
 
         Returns:
         Z -- conv output, numpy array of shape (m, n_H, n_W, n_C)
@@ -39,13 +38,12 @@ class Conv2d(Function):
         # Retrieve dimensions from A_prev's shape (≈1 line)
         (m, n_H_prev, n_W_prev, n_C_prev) = self.args[0].data.shape
         W = self.args[1].data
-        b = self.args[2].data
         # Retrieve dimensions from W's shape (≈1 line)
         (f, f, n_C_prev, n_C) = W.shape
 
         # Retrieve information from "hparameters" (≈2 lines)
-        stride = self.args[3].data.item()
-        pad = self.args[4].data.item()
+        stride = self.kwargs['stride']
+        pad = self.kwargs['padding']
 
         # Compute the dimensions of the CONV output volume using the formula given above. Hint: use int() to floor. (≈2 lines)
         n_H = int((n_H_prev - f + 2 * pad) / stride) + 1
@@ -73,7 +71,7 @@ class Conv2d(Function):
                         a_slice_prev = a_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]
 
                         # Convolve the (3D) slice with the correct filter W and bias b, to get back one output neuron. (≈1 line)
-                        Z[i, h, w, c] = conv_single_step(a_slice_prev, W[..., c], b[..., c])
+                        Z[i, h, w, c] = conv_single_step(a_slice_prev, W[..., c])
 
         ### END CODE HERE ###
 
@@ -108,7 +106,7 @@ class Conv2d(Function):
                    numpy array of shape (m, n_H_prev, n_W_prev, n_C_prev)
         dW -- gradient of the cost with respect to the weights of the conv layer (W)
               numpy array of shape (f, f, n_C_prev, n_C)
-        db -- gradient of the cost with respect to the biases of the conv layer (b)
+        *deleted* db -- gradient of the cost with respect to the biases of the conv layer (b)
               numpy array of shape (1, 1, 1, n_C)
         """
 
@@ -116,10 +114,9 @@ class Conv2d(Function):
         # Retrieve information from "cache"
         A_prev = self.args[0].data
         W = self.args[1].data
-        b = self.args[2].data
         # Retrieve information from "parameters"
-        stride = self.args[3].data.item()
-        pad = self.args[4].data.item()
+        stride = self.kwargs['stride']
+        pad = self.kwargs['padding']
 
         # Retrieve dimensions from A_prev's shape
         (m, n_H_prev, n_W_prev, n_C_prev) = A_prev.shape
@@ -133,7 +130,6 @@ class Conv2d(Function):
         # Initialize dA_prev, dW, db with the correct shapes
         dA_prev = np.zeros((m, n_H_prev, n_W_prev, n_C_prev))
         dW = np.zeros((f, f, n_C_prev, n_C))
-        db = np.zeros((1, 1, 1, n_C))
 
         # Pad A_prev and dA_prev
         A_prev_pad = zero_pad(A_prev, pad)
@@ -161,7 +157,6 @@ class Conv2d(Function):
                         # Update gradients for the window and the filter's parameters using the code formulas given above
                         da_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :] += W[:, :, :, c] * grad_output[i, h, w, c]
                         dW[:, :, :, c] += a_slice * grad_output[i, h, w, c]
-                        db[:, :, :, c] += grad_output[i, h, w, c]
 
             # Set the ith training example's dA_prev to the unpaded da_prev_pad (Hint: use X[pad:-pad, pad:-pad, :])
             dA_prev[i, :, :, :] = da_prev_pad[pad:-pad, pad:-pad, :]
@@ -170,4 +165,4 @@ class Conv2d(Function):
         # Making sure your output shape is correct
         assert (dA_prev.shape == (m, n_H_prev, n_W_prev, n_C_prev))
 
-        return tuple([dA_prev, dW, db])
+        return tuple([dA_prev, dW])

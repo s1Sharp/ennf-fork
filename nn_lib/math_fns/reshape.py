@@ -16,7 +16,7 @@ class Reshape(Function):
         https://numpy.org/doc/stable/user/basics.broadcasting.html
         :return: sum of the two arguments
         """
-        result = self.args[0].data.reshape(self.args[1].data)
+        result = self.args[0].data.reshape(self.kwargs['shape'])
         return result
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
