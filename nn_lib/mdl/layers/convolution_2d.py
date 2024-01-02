@@ -10,9 +10,13 @@ class Conv2d(Module):
     """
 
     """
-    def __init__(self, in_dim: int, out_dim: int, activation_fn: str = 'relu'):
-        raise NotImplementedError
-
+    def __init__(self, in_dim: int, out_dim: int, stride:int = 1, padding: int = 0):
+        self.in_dim = in_dim
+        self.out_dim = out_dim
+        self.b = Tensor()
+        self.W = Tensor()
+        self.stride = stride
+        self.padding = padding
 
     def forward(self, x: Tensor) -> Tensor:
         raise NotImplementedError

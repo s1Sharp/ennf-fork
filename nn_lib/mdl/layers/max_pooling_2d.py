@@ -11,7 +11,7 @@ class MaxPool2d(Module):
     Linear module is a building block of multi-layer perceptron neural network that performs a linear transform of the
     data batch
     """
-    def __init__(self, in_dim: int, out_dim: int, activation_fn: str = 'relu'):
+    def __init__(self, in_dim: int, out_dim: int):
         raise NotImplementedError
 
 

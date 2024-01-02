@@ -3,6 +3,9 @@ import numpy as np
 
 from nn_lib.math_fns.function import Function
 
+#https://stackoverflow.com/questions/38576151/what-is-happening-with-max-pool-backward-in-tensorflow
+#https://tinynet.autoai.org/en/latest/induction/unpooling.html
+#https://arxiv.org/pdf/2210.10922.pdf
 
 class MaxUnpool2d(Function):
     """
