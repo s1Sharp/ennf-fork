@@ -14,7 +14,8 @@ from nn_lib.data import Dataset
 
 class PH2(Dataset):
     """
-    A simple PH2 classification dataset consisting of ten digits
+    A simple PH2 classification dataset
+    https://www.kaggle.com/datasets/kanametov/ph2dataset
     """
 
     def __init__(self, ds_type: str = 'test'):
