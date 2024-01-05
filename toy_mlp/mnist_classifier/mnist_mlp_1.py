@@ -79,5 +79,5 @@ if __name__ == '__main__':
                             Relu(),
                             LinearL(in_dim=128, out_dim=10)
                             ],
-                    optim=Adam,
+                            optim=Adam,
                     milestones=[10], visualize=True)

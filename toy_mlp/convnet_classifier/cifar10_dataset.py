@@ -21,51 +21,47 @@ class CIFAR10(Dataset):
 
         self.path = r'cifar-10-batches-py/'
         self.file:str
-        self.data: np.ndarray
-        self.labels: np.ndarray
+        self.data: np.ndarray = np.array([])
+        self.labels: np.ndarray = np.array([])
         self.n_samples:int = 10000
-        self.batch_num = 1
 
         self.ds_type = ds_type
         # dump information to that file
         if ds_type == 'train':
             self.file = 'data_batch_'
+            full_path = self.path + self.file + str('1')
+            dict_ = self._get_dict(full_path)
+            self.data, self.labels = dict_[b'data'], np.array(dict_[b'labels'])
+            for i in range(2,6):
+                full_path = self.path + self.file + str(i)
+                dict_ = self._get_dict(full_path)
+                self.data = np.vstack([self.data,dict_[b'data']])
+                self.labels = np.hstack([self.labels,dict_[b'labels']])
 
         elif ds_type == 'val':
             self.file = 'test_batch'
-            self._load_batch()
-
-
-
-    def _load_batch(self):
-        full_path = self.path + self.file
-        if self.ds_type == 'train':
-            full_path += str(self.batch_num)
-            self.batch_num += 1
-
-        with open(full_path, 'rb') as fo:
-            dict = pickle.load(fo, encoding='bytes')
-        self.data, self.labels = dict[b'data'], np.array(dict[b'labels'])
+            full_path = self.path + self.file
+            dict_ = self._get_dict(full_path)
+            self.data, self.labels = dict_[b'data'], np.array(dict_[b'labels'])
         self.n_samples = len(self.labels)
         self.data = self.from1dTo2d()
         self.labels = self.label_to_one_hot_ecoding()
 
+    def _get_dict(self,full_path:str)->dict:
+        with open(full_path, 'rb') as fo:
+            dict_ = pickle.load(fo, encoding='bytes')
+        return dict_
     def label_to_one_hot_ecoding(self):
         self.plainLabels = self.labels
         ohe = OneHotEncoder()
         return ohe.fit_transform(self.labels.reshape(-1, 1)).toarray()
 
     def __getitem__(self, index: int) -> Tuple[np.ndarray, np.ndarray]:
-        if self.ds_type == 'train':
-            if index >= self.n_samples * (self.batch_num-1):
-                self._load_batch()
-        index = index - self.n_samples*(self.batch_num-1)
+        index = index - self.n_samples
         result = self.data[index], self.labels[index]
         return result
 
     def __len__(self) -> int:
-        if self.ds_type == 'train':
-            return self.n_samples * 5
         return self.n_samples
 
     def from1dTo2d(self):

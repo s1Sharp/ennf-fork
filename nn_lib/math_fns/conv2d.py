@@ -80,7 +80,7 @@ class Conv2d(Function):
 
         # Save information in "cache" for the backprop
 
-        return tuple([Z])
+        return Z
 
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -159,7 +159,11 @@ class Conv2d(Function):
                         dW[:, :, :, c] += a_slice * grad_output[i, h, w, c]
 
             # Set the ith training example's dA_prev to the unpaded da_prev_pad (Hint: use X[pad:-pad, pad:-pad, :])
-            dA_prev[i, :, :, :] = da_prev_pad[pad:-pad, pad:-pad, :]
+            if pad > 0:
+                dA_prev[i, :, :, :] = da_prev_pad[pad:-pad, pad:-pad, :]
+            else:
+                dA_prev[i] = da_prev_pad
+
         ### END CODE HERE ###
 
         # Making sure your output shape is correct

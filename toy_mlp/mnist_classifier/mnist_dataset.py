@@ -13,14 +13,14 @@ class MnistDataset(Dataset):
 
     """
 
-    def __init__(self, ds_type: str = 'test'):
+    def __init__(self, ds_type: str = 'test',conv:bool=False):
         """
         Init mnist dataset
         """
         # open a file, where you stored the pickled data
         assert ds_type in ('test', 'val', 'train')
 
-        file = open('mnist.pkl', 'rb')
+        file = open(r'C:\Users\Timur\Documents\GitHub\ennf-fork\toy_mlp\mnist_classifier\mnist.pkl', 'rb')
 
         # dump information to that file
         data = pickle.load(file, encoding='latin1')
@@ -36,6 +36,8 @@ class MnistDataset(Dataset):
         self.data, self.labels = data[k]
         self.n_samples = self.labels.shape[0]
         self.label_to_one_hot_ecoding()
+        if conv:
+            self.from1dTo2d()
 
     def label_to_one_hot_ecoding(self):
         self.plainLabels = self.labels
@@ -50,7 +52,7 @@ class MnistDataset(Dataset):
         return self.n_samples
 
     def from1dTo2d(self):
-        self.data = self.data.reshape(self.data.shape[0], 28, 28)
+        self.data = self.data.reshape(self.data.shape[0], 28, 28,1)
 
     def from2dTo1d(self):
         self.data = self.data.reshape(self.data.shape[0], self.data.shape[1] * self.data.shape[2])

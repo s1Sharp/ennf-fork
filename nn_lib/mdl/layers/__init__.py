@@ -5,3 +5,6 @@ from nn_lib.mdl.layers.batch_norm_2d import BatchNorm2d
 from nn_lib.mdl.layers.batch_norm_1d import BatchNorm1d
 from nn_lib.mdl.layers.sigmoid import Sigmoid
 from nn_lib.mdl.layers.relu import Relu
+from nn_lib.mdl.layers.convolution_2d import Conv2d
+from nn_lib.mdl.layers.max_pooling_2d import MaxPool2d
+from nn_lib.mdl.layers.reshape import Reshape

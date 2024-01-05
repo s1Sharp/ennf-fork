@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 import numpy as np
 
 from nn_lib.mdl.module import Module
@@ -11,22 +11,24 @@ class Conv2d(Module):
     2d convolution layer
     Basically convolve 2-dim input
     """
-    def __init__(self, in_dim: int, out_dim: int, stride:int = 1, padding: int = 0):
+    def __init__(self, in_dim: int, out_dim: int, kernel_size:int, stride:int = 1, padding: int = 0):
         self.in_dim = in_dim
         self.out_dim = out_dim
         scale = np.sqrt(1 / self.in_dim)
-        # :TODO shapes are WRONG
-        self.b = Tensor(self.init_parameter((self.in_dim, self.out_dim), scale), requires_grad=True)   # :TODO figure out dims
-        self.W = Tensor(self.init_parameter((self.in_dim, self.out_dim), scale), requires_grad=True)   # :TODO figure out dims
+        self.bias = Tensor(self.init_parameter(shape=(self.out_dim), scale=scale), requires_grad=True)   # :TODO figure out dims
+        self.weight = Tensor(self.init_parameter((kernel_size, kernel_size, self.in_dim, self.out_dim), scale), requires_grad=True)   # :TODO figure out dims
         self.stride = stride
         self.padding = padding
 
     def forward(self, x: Tensor) -> Tensor:
-        # :TODO multiple conv cores
-        result = F.conv2d(x,self.W,stride=self.stride,padding=self.padding) + self.b
+        conv = F.conv2d(x,self.weight ,stride=self.stride,padding=self.padding)
+        result = conv + self.bias
         return result
 
-    def init_parameter(shape: Tuple[int, int], scale: float) -> np.ndarray:
+    def parameters(self) -> List[Tensor]:
+        return [self.weight, self.bias]
+
+    def init_parameter(self, shape, scale: float) -> np.ndarray:
         """
         Used for initializing weight or bias parameters
         :param shape: shape of the parameter

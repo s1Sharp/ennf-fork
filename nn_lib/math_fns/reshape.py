@@ -16,10 +16,11 @@ class Reshape(Function):
         https://numpy.org/doc/stable/user/basics.broadcasting.html
         :return: sum of the two arguments
         """
-        result = self.args[0].data.reshape(self.kwargs['shape'])
+        shape = [self.args[0].data.shape[0]] + self.kwargs['shape']
+        result = self.args[0].data.reshape(shape)
         return result
 
-    def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:
         """
         Note: because of the broadcasting, arguments and grad_output can have different shapes, we reduce the
         gradients to their original shape inside reduce_gradient() parent method, hence it is ok here for the

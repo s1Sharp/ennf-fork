@@ -5,6 +5,7 @@ from nn_lib.math_fns.function import Function
 from nn_lib.support_func.mask import create_mask_from_window
 
 #https://leimao.github.io/blog/Max-Pooling-Backpropagation/
+# :TODO mat optimize maxpool backward
 
 class MaxPool2d(Function):
     mode = 'max'
@@ -104,8 +105,8 @@ class MaxPool2d(Function):
 
         ### START CODE HERE ###
 
-        stride = self.args[1].data.item()
-        sliding_window_size = self.args[2].data.item()
+        stride = self.kwargs['stride']
+        sliding_window_size = self.kwargs['sliding_window_size']
         # Retrieve dimensions from A_prev's shape and dA's shape (≈2 lines)
         m, n_H_prev, n_W_prev, n_C_prev = self.args[0].data.shape
         m, n_H, n_W, n_C = grad_output.shape
