@@ -3,6 +3,7 @@ from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle, gzip
+from skimage import color
 
 from nn_lib.data import Dataset
 
@@ -12,7 +13,7 @@ class CIFAR10(Dataset):
     A simple CIFAR10 classification dataset consisting of ten digits
 
     """
-    def __init__(self, ds_type: str = 'test'):
+    def __init__(self, ds_type: str = 'test',gray_scale:bool=False):
         """
         Init mnist dataset
         """
@@ -46,6 +47,8 @@ class CIFAR10(Dataset):
         self.n_samples = len(self.labels)
         self.data = self.from1dTo2d()
         self.labels = self.label_to_one_hot_ecoding()
+        if gray_scale:
+            self.data = self.data_to_grey()
 
     def _get_dict(self,full_path:str)->dict:
         with open(full_path, 'rb') as fo:
@@ -66,6 +69,13 @@ class CIFAR10(Dataset):
 
     def from1dTo2d(self):
         return np.moveaxis(self.data.reshape((self.n_samples,3,32,32)),1,-1)
+
+    def data_to_grey(self) -> np.ndarray:
+        ldata = []
+        for pic in self.data:
+            ldata.append(color.rgb2gray(pic))
+        s = self.data.shape
+        return np.array(ldata).reshape((s[0],s[1],s[2],s[3]-2))
 
     def visualize(self, predictions: Union[np.ndarray, None] = None, number: int = -1,
                   show_positive: bool = True) -> None:

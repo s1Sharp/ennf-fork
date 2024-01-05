@@ -7,3 +7,4 @@ venv
 nn_lib/mdl/layers/to_do.txt
 *.tar.gz
 cifar-10-batches-py
+PH2Dataset
