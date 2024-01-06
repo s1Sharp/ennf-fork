@@ -25,11 +25,11 @@ def main(n_epochs, layers, optim: Optimizer = Adam, milestones=[], visualize=Fal
     model_trainer = ModelTrainer(mlp_model, loss_fn, optimizer, scheduler=scheduler)
 
     # generate a validation dataset different from the training dataset
-    val_dataset = CIFAR10(ds_type='val',gray_scale=True)
-    #val_dataset = MnistDataset(ds_type='val',conv=True)
+    #val_dataset = CIFAR10(ds_type='val',gray_scale=True)
+    val_dataset = MnistDataset(ds_type='val',conv=True)
     # generate a training dataset
-    train_dataset = CIFAR10(ds_type='train',gray_scale=True)
-    #train_dataset = MnistDataset(ds_type='train',conv=True)
+    #train_dataset = CIFAR10(ds_type='train',gray_scale=True)
+    train_dataset = MnistDataset(ds_type='train',conv=True)
     # create a dataloader for training data with shuffling and dropping last batch
     train_dataloader = Dataloader(train_dataset, batch_size=100, shuffle=True, drop_last=True)
     # create a dataloader for validation dataset without shuffling or last batch dropping
@@ -60,10 +60,10 @@ def main(n_epochs, layers, optim: Optimizer = Adam, milestones=[], visualize=Fal
 
 if __name__ == '__main__':
         main(n_epochs=2,layers=[Conv2d(in_dim=1,out_dim=1,kernel_size=3,stride=1,padding=0),
-                                Relu(),
+                              #  Relu(),
                             MaxPool2d(),
-                            Reshape([225]),
-                            LinearL(in_dim=225, out_dim=10)
+                            Reshape([169]),
+                            LinearL(in_dim=169, out_dim=10)
                             ],
                             optim=Adam,
                     milestones=[10], visualize=True)

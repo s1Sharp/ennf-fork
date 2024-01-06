@@ -18,7 +18,7 @@ class MaxUnpool2d(Module):
         self.stride = stride
 
     def forward(self, x: Tensor, indices:Tensor) -> Tensor:
-        result = F.max_unpool_2d(x, indices,sliding_window_size=self.sliding_window_size,
+        result = F.max_unpool_2d(x, indices, sliding_window_size=self.sliding_window_size,
                              stride=self.stride, padding=self.padding)
         return result
 

@@ -10,9 +10,9 @@ def create_mask_from_window(x):
     Returns:
     mask -- Array of the same shape as window, contains a True at the position corresponding to the max entry of x.
     """
-
+    mask = np.zeros_like(x)
     ### START CODE HERE ### (≈1 line)
-    mask = (x == np.max(x))
+    mask.reshape(-1)[np.argmax(x.reshape(-1))] = 1.
     ### END CODE HERE ###
 
     return mask
