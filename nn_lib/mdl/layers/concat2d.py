@@ -7,7 +7,7 @@ class Concat2d(Module):
     """
     Concatinate 2 layers
     """
-    def __init__(self, axis:int):
+    def __init__(self, axis:int=-1):
         self.axis = axis
 
 

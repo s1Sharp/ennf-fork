@@ -7,4 +7,6 @@ from nn_lib.mdl.layers.sigmoid import Sigmoid
 from nn_lib.mdl.layers.relu import Relu
 from nn_lib.mdl.layers.convolution_2d import Conv2d
 from nn_lib.mdl.layers.max_pooling_2d import MaxPool2d
+from nn_lib.mdl.layers.max_unpooling_2d import MaxUnpool2d
+from nn_lib.mdl.layers.concat2d import Concat2d
 from nn_lib.mdl.layers.reshape import Reshape

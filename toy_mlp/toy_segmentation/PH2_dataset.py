@@ -15,7 +15,7 @@ class PH2(Dataset):
     https://www.kaggle.com/datasets/kanametov/ph2dataset
     """
 
-    def __init__(self, ds_type: str = 'test'):
+    def __init__(self, ds_type: str = 'test',size = (256, 256)):
         """
         Init PH2 dataset for segmentation
         """
@@ -35,7 +35,7 @@ class PH2(Dataset):
             if root.endswith('_lesion'):
                 lesions.append(imread(os.path.join(root, files[0])))
 
-        size = (256, 256)
+
         self.data = [resize(x, size, mode='constant', anti_aliasing=True, ) for x in images]
         self.labels = [resize(y, size, mode='constant', anti_aliasing=False) > 0.5 for y in lesions]
         if self.ds_type == 'test':
@@ -96,5 +96,5 @@ class PH2(Dataset):
 
 
 if __name__ == '__main__':
-    train_dataset = PH2(ds_type='val')
+    train_dataset = PH2(ds_type='val',size=(32,32))
     train_dataset.visualize()
