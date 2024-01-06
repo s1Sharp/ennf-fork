@@ -18,7 +18,7 @@ class Concat2d(Function):
         https://numpy.org/doc/stable/user/basics.broadcasting.html
         :return: sum of the two arguments
         """
-        return np.concatenate(self.args[0].data, self.args[1].data, axis=self.kwargs['axis'])
+        return np.concatenate([self.args[0].data, self.args[1].data], axis=self.kwargs['axis'])
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -30,6 +30,11 @@ class Concat2d(Function):
         :param grad_output: gradient over the result of the addition operation
         :return: a tuple of gradients over two addition arguments
         """
-        x = np.ones_like(self.args[0].data)
-        y = np.ones_like(self.args[1].data)
-        return tuple([grad_output * x, grad_output * y])
+        if self.kwargs['axis'] == -1:
+            k = self.args[0].shape[-1]
+            return tuple([grad_output[...,:k], grad_output[...,k:]])
+        else:
+            raise NotImplementedError
+
+        raise NotImplementedError
+

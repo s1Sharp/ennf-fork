@@ -38,12 +38,14 @@ class PH2(Dataset):
 
         self.data = [resize(x, size, mode='constant', anti_aliasing=True, ) for x in images]
         self.labels = [resize(y, size, mode='constant', anti_aliasing=False) > 0.5 for y in lesions]
-        if self.ds_type == 'test':
+        if self.ds_type == 'train':
             self.data = np.array(self.data[:150])
             self.labels = np.array(self.labels[:150])
         elif self.ds_type == 'val':
             self.data = np.array(self.data[150:])
             self.labels = np.array(self.labels[150:])
+        shape = self.labels.shape
+        self.labels = self.labels.reshape((shape[0],shape[1],shape[2],1))
         self.n_samples = len(self.data)
 
 

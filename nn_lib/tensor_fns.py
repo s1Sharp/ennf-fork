@@ -102,8 +102,8 @@ def conv2d(x: Tensor, w: Tensor, stride: int, padding: int = 0) -> Tensor:
     result = Tensor.apply_fn(Conv2d, x, w, stride=stride, padding=padding)
     return result
 
-def concat2d(x: Tensor, y: Tensor, axis:int=1) -> Tensor:
-    result = Tensor.apply_fn(Concat2d, x, y, axis=1)
+def concat2d(x: Tensor, y: Tensor, axis:int=-1) -> Tensor:
+    result = Tensor.apply_fn(Concat2d, x, y, axis=-1)
     return result
 
 def reshape(x: Tensor, shape:tuple[int]) -> Tensor:

@@ -37,7 +37,7 @@ class MaxUnpool2d(Function):
             for j in range(shape[-1]):
                 result[i,...,j] = np.kron(x[i,...,j], np.ones((2,2), dtype=x.dtype))
         result = result * unpooling_indicies
-        raise result
+        return result
 
     #@jit
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:
@@ -65,4 +65,4 @@ class MaxUnpool2d(Function):
                         a_prev_slice = grad[i, vert_start:vert_end, horiz_start:horiz_end, i3]
                         result[i, i1, i2, i3] = np.max(a_prev_slice)
 
-        raise [result]
+        return [result]

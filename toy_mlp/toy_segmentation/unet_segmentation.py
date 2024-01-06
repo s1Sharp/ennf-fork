@@ -5,6 +5,7 @@ from nn_lib.data import Dataloader
 from toy_mlp.toy_segmentation.model_trainer import UNetTrainer
 from toy_mlp.mnist_classifier.mnist_mlp_classifier import MnistMLPClassifier
 from toy_mlp.toy_segmentation.unet import UNet
+from toy_mlp.toy_segmentation.small_unet import SmallUNet
 from toy_mlp.history_plotter import plot_loss
 from toy_mlp.toy_segmentation.PH2_dataset import PH2
 
@@ -12,9 +13,9 @@ from toy_mlp.toy_segmentation.PH2_dataset import PH2
 from nn_lib.scheduler.multi_step_lr import MultiStepLR
 
 
-def main(n_epochs, optim: Optimizer = Adam, milestones=[]):
+def main(n_epochs, optim: Optimizer = Adam,batch_size=25, milestones=[]):
     # create binary MLP classification model
-    mlp_model = UNet()
+    mlp_model = SmallUNet()
     print(f'Created the following binary MLP classifier:\n{mlp_model}')
     # create loss function
     loss_fn = CELoss()
@@ -25,13 +26,13 @@ def main(n_epochs, optim: Optimizer = Adam, milestones=[]):
     model_trainer = UNetTrainer(mlp_model, loss_fn, optimizer, scheduler=scheduler)
 
     # generate a training dataset
-    train_dataset = PH2(ds_type='train',size=(32,32))
+    train_dataset = PH2(ds_type='train',size=(16,16))
     # generate a validation dataset different from the training dataset
-    val_dataset = PH2(ds_type='val',size=(32,32))
+    val_dataset = PH2(ds_type='val',size=(16,16))
     # create a dataloader for training data with shuffling and dropping last batch
-    train_dataloader = Dataloader(train_dataset, batch_size=100, shuffle=True, drop_last=True)
+    train_dataloader = Dataloader(train_dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     # create a dataloader for validation dataset without shuffling or last batch dropping
-    val_dataloader = Dataloader(val_dataset, batch_size=100, shuffle=False, drop_last=False)
+    val_dataloader = Dataloader(val_dataset, batch_size=batch_size, shuffle=False, drop_last=False)
 
     # train the model for a given number of epochs
     model_trainer.set_datasets(train_dataloader, val_dataloader)
@@ -44,4 +45,4 @@ def main(n_epochs, optim: Optimizer = Adam, milestones=[]):
 
 
 if __name__ == '__main__':
-    main(1,Adam)
+    main(1,Adam,25)
