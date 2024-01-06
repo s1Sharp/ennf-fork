@@ -1,9 +1,6 @@
 from typing import Tuple, Union
-from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle, gzip
-from skimage import color
 from skimage.io import imread
 import os
 from skimage.transform import resize
@@ -20,7 +17,7 @@ class PH2(Dataset):
 
     def __init__(self, ds_type: str = 'test'):
         """
-        Init mnist dataset
+        Init PH2 dataset for segmentation
         """
         # open a file, where you stored the pickled data
         assert ds_type in ('val', 'train')

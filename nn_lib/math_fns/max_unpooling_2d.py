@@ -2,7 +2,7 @@ from typing import Tuple
 import numpy as np
 
 from nn_lib.math_fns.function import Function
-
+from numba import jit
 #https://stackoverflow.com/questions/38576151/what-is-happening-with-max-pool-backward-in-tensorflow
 #https://tinynet.autoai.org/en/latest/induction/unpooling.html
 #https://arxiv.org/pdf/2210.10922.pdf
@@ -15,7 +15,7 @@ class MaxUnpool2d(Function):
     def __init__(self, *args: 'Tensor', **kwargs):
         super().__init__(*args,**kwargs)
 
-
+    #@jit
     def forward(self) -> np.ndarray:
         """
         Add two arguments and return their sum
@@ -39,6 +39,7 @@ class MaxUnpool2d(Function):
         result = result * unpooling_indicies
         raise result
 
+    #@jit
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:
         """
         Note: because of the broadcasting, arguments and grad_output can have different shapes, we reduce the

@@ -5,6 +5,7 @@ import numpy as np
 from nn_lib.math_fns.function import Function
 from nn_lib.support_func.mask import create_mask_from_window
 
+from numba import jit
 #https://leimao.github.io/blog/Max-Pooling-Backpropagation/
 # :TODO mat optimize maxpool backward
 
@@ -18,7 +19,7 @@ class MaxPool2d(Function):
         self._mask = np.zeros_like(self.args[0].data)
 
     # :TODO add jit and return indicies
-#    @numba.jit
+    #@jit
     def forward(self) -> Tuple[np.ndarray,np.ndarray]:
         """
         Add two arguments and return their sum
@@ -88,7 +89,7 @@ class MaxPool2d(Function):
 
         return A
 
-#   @numba.jit
+    #@jit
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
         Note: because of the broadcasting, arguments and grad_output can have different shapes, we reduce the

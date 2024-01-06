@@ -5,13 +5,14 @@ from nn_lib.math_fns.function import Function
 from nn_lib.support_func.conv_step import conv_single_step
 from nn_lib.support_func.padding import zero_pad
 
-#from numba import jit
+from numba import jit
 #https://tinynet.autoai.org/en/latest/induction/convolution.html
 
 class Conv2d(Function):
     """
     Addition of two elements
     """
+    #@jit
     def forward(self) -> np.ndarray:
         """
 
@@ -83,7 +84,7 @@ class Conv2d(Function):
 
         return Z
 
-
+    #@jit
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
 
