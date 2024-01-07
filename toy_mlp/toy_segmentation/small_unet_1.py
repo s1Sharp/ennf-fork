@@ -7,7 +7,7 @@ from nn_lib.mdl import Module
 from nn_lib.mdl.layers import *
 import nn_lib.tensor_fns as F
 
-class UNet(Module):
+class SmallUNet1(Module):
     """
     Class representing a multilayer perceptron network for solving binary classification task
     Number of filters K
@@ -24,46 +24,34 @@ class UNet(Module):
         :param hidden_layer_sizes: number of neurons in hidden layers of MLP
         """
         self._parameters = []
+        kernum = 32
         self.enc_conv0 = [
-            Conv2d(3, 64, 3, 1, 1),
+            Conv2d(3, kernum, 3, 1, 1),
             Relu(),
-            Conv2d(64, 64, 3, 1, 1),
+            Conv2d(kernum, kernum, 3, 1, 1),
             Relu(),
         ]
         self.pool0 = MaxPool2d(2, 2) # 32 -> 16
-        self.enc_conv1 = [
-            Conv2d(64, 128, 3, 1, 1),
-            Relu(),
-            Conv2d(128, 128, 3, 1, 1),
-            Relu()
-        ]
-        self.pool1 = MaxPool2d(2, 2) #16 -> 8
+
         self.bottle_neck = [
-            Conv2d(128, 256, 3, 1, 1),
+            Conv2d(kernum, kernum, 3, 1, 1),
             Relu(),
-            Conv2d(256, 256, 3, 1, 1),
+            Conv2d(kernum, kernum, 3, 1, 1),
             Relu()
         ]
         self.unpool0 = MaxUnpool2d(2, 2)  # 8 -> 16
         self.concat0 = Concat2d()
         self.dec_conv0 = [
-            Conv2d(256*2, 128, 3, 1,1),
+            Conv2d(kernum*2, kernum, 3, 1, 1),
             Relu(),
-            Conv2d(128, 128, 3, 1,1),
+            Conv2d(kernum, kernum, 3, 1, 1),
             Relu()
         ]
-        self.unpool1 = MaxUnpool2d(2,2) # 16 -> 32
-        self.concat1 = Concat2d()
-        self.dec_conv1 = [
-            Conv2d(128 * 2, 64, 3, 1,1),
-            Relu(),
-            Conv2d(64, 64, 3, 1,1),
-            Relu()
-        ]
-        self.last = Conv2d(64, 1, 3, 1,1)
+
+        self.last = Conv2d(kernum, 1, 3, 1, 1)
 
         self.layers = [
-            self.enc_conv0, self.enc_conv1, self.bottle_neck ,self.dec_conv0, self.dec_conv1, [self.last]
+            self.enc_conv0, self.bottle_neck ,self.dec_conv0, [self.last]
         ]
         self._fill_parameters()
 
@@ -100,20 +88,13 @@ class UNet(Module):
         e0 = self.pool0.forward(pre_e0)
         ind0 = self.pool0.get_mask()
 
-        pre_e1 = self._forward(e0, self.enc_conv1)
-        e1 = self.pool1.forward(pre_e1)
-        ind1 = self.pool1.get_mask()
+        b = self._forward(e0, self.bottle_neck)
 
-        b = self._forward(e1, self.bottle_neck)
-
-        d0 = self.unpool0.forward(b,ind1)
-        cat0 = self.concat0.forward(pre_e1, d0)
+        d0 = self.unpool0.forward(b,ind0)
+        cat0 = self.concat0.forward(pre_e0, d0)
         pre_d0 = self._forward(cat0, self.dec_conv0)
 
-        d1 = self.unpool1.forward(pre_d0,ind0)
-        cat1 = self.concat1.forward(pre_d0, d1)
-        pre_d1 = self._forward(cat1, self.dec_conv1)
-        predictions = self.last.forward(pre_d1)
+        predictions = self.last.forward(pre_d0)
 
         return predictions
 
