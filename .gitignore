@@ -6,4 +6,3 @@ __pycache__
 venv
 *.tar.gz
 cifar-10-batches-py
-PH2Dataset
