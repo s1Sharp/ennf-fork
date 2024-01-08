@@ -17,14 +17,13 @@ class SmallUNet1(Module):
     W2=(W1−K+2P)/S+1
     """
 
-    def __init__(self):
+    def __init__(self,kernum:int=32):
         """
         Creates binary MLP classifier
         :param in_features: number of feature in the input data
         :param hidden_layer_sizes: number of neurons in hidden layers of MLP
         """
         self._parameters = []
-        kernum = 32
         self.enc_conv0 = [
             Conv2d(3, kernum, 3, 1, 1),
             Relu(),

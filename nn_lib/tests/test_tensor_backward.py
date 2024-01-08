@@ -5,7 +5,8 @@ import torch
 from nn_lib import Tensor
 import nn_lib.tensor_fns as F
 from nn_lib.tests.utils import seeded_random
-
+from nn_lib.mdl.layers import Conv2d
+from nn_lib.mdl.loss_functions import BCELoss_logits
 
 class TestTensorBackward(unittest.TestCase):
     """
@@ -726,13 +727,15 @@ class TestTensorBackward(unittest.TestCase):
         self.assertEqual(1, 1)
 
     def test_conv_1(self):
-        a = torch.tensor(np.ones((1,1,30,30)), requires_grad=True)
-        conv = torch.conv2d(1,1)
-        filters = torch.randn(8, 4, 3, 3)
-        c = torch.conv2d(a,filters,padding=1)
-        d = torch.sin(c)
-        d.backward()
-        self.assertEqual(1, 1)
+        a = Tensor(np.random.rand(25,16,16,32), requires_grad=True)
+        b = Tensor(np.random.rand(25,16,16,16), requires_grad=False)
+        c = Conv2d(32,16,3,1,1)
+        x = c.forward(a)
+        loss = BCELoss_logits()
+        l = loss.forward(x,b)
+        l.backward()
+
+
 
 
 def tt_create(x):

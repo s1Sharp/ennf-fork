@@ -21,7 +21,7 @@ def main(n_epochs, optim: Optimizer = Adam,batch_size=25, milestones=[]):
     # create loss function
     loss_fn = BCELoss_logits() #CELoss()
     # create optimizer for model parameters
-    optimizer = optim(mlp_model.parameters(), lr=1e-3, weight_decay=5e-4)
+    optimizer = optim(mlp_model.parameters(), lr=1e-2, weight_decay=5e-4)
     scheduler = MultiStepLR(optimizer, milestones=milestones, gamma=0.5)
     # create a model trainer
     model_trainer = UNetTrainer(mlp_model, loss_fn, optimizer, scheduler=scheduler)
@@ -48,4 +48,4 @@ def main(n_epochs, optim: Optimizer = Adam,batch_size=25, milestones=[]):
 
 
 if __name__ == '__main__':
-    main(10,Adam,25)
+    main(10,Adam,25,[0])

@@ -19,7 +19,7 @@ class MaxPool2d(Function):
         self._mask = np.zeros_like(self.args[0].data)
 
     # :TODO add jit and return indicies
-    #@jit
+    @jit
     def forward(self) -> Tuple[np.ndarray,np.ndarray]:
         """
         Add two arguments and return their sum
@@ -89,7 +89,7 @@ class MaxPool2d(Function):
 
         return A
 
-    #@jit
+    @jit
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
         Note: because of the broadcasting, arguments and grad_output can have different shapes, we reduce the

@@ -15,7 +15,7 @@ class MaxUnpool2d(Function):
     def __init__(self, *args: 'Tensor', **kwargs):
         super().__init__(*args,**kwargs)
 
-    #@jit
+    @jit
     def forward(self) -> np.ndarray:
         """
         Add two arguments and return their sum
@@ -39,7 +39,7 @@ class MaxUnpool2d(Function):
         result = result * unpooling_indicies
         return result
 
-    #@jit
+    @jit
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray]:
         """
         Note: because of the broadcasting, arguments and grad_output can have different shapes, we reduce the
