@@ -128,7 +128,7 @@ class ModelTrainer(Module):
 
             predictions.extend(positive_predictions.tolist())
         if not multiclass:
-            predictions = np.array(predictions, np.bool)
+            predictions = np.array(predictions, bool)
 
         accuracy = n_correct_predictions / n_predictions
         mean_loss = loss_values_sum / n_predictions
