@@ -17,6 +17,9 @@ class SumReduce(Function):
         :param axis: axis or multiple axes to sum over
         """
         super(SumReduce, self).__init__(*args)
+
+        self.keepdims = keepdims
+
         if axis is None:
             axis = tuple(range(len(self.args[0].data.shape)))
         if isinstance(axis, int):
@@ -30,7 +33,7 @@ class SumReduce(Function):
 
         :return: the reduced value
         """
-        return np.sum(self.args[0].data, axis=self.axis, keepdims=True)
+        return np.sum(self.args[0].data, axis=self.axis, keepdims=self.keepdims)
 
     def _backward(self, grad_output: np.ndarray) -> Tuple[np.ndarray, ...]:
         """
