@@ -2,3 +2,8 @@
 __pycache__
 /env
 .vscode
+*.pkl
+venv
+*.tar.gz
+cifar-10-batches-py
+PH2Dataset

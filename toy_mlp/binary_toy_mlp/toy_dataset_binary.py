@@ -13,7 +13,7 @@ DEFAULT_DATASET_PARAMETERS = dict(
 )
 
 
-class ToyDataset(Dataset):
+class ToyDatasetBinary(Dataset):
     """
     A simple binary classification dataset consisting of two 2D point clusters, each cluster representing a
     classification category; points are artificially generated
@@ -95,7 +95,7 @@ class ToyDataset(Dataset):
 
 
 if __name__ == '__main__':
-    # dataset = ToyDataset(1000, 'blobs')
-    # dataset = ToyDataset(1000, 'moons')
-    dataset = ToyDataset(1000, 'circles')
+    dataset = ToyDatasetBinary(1000, 'blobs')
+    #dataset = ToyDatasetBinary(1000, 'moons')
+    #dataset = ToyDatasetBinary(1000, 'circles')
     dataset.visualize()

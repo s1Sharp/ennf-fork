@@ -24,4 +24,4 @@ class Inv(Function):
         :param grad_output: gradient over the result of the invert function
         :return: a tuple with a single value representing the gradient over the inversion argument
         """
-        return tuple([ np.negative( np.multiply( np.power(self.args[0].data, -2 ), grad_output ) ) ])
+        return tuple([ np.negative( np.multiply(np.power(self.args[0].data, -2 ), grad_output ) ) ])

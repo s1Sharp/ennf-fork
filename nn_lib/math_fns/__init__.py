@@ -11,3 +11,11 @@ from nn_lib.math_fns.sum_reduce import SumReduce
 from nn_lib.math_fns.max import Max
 from nn_lib.math_fns.min import Min
 from nn_lib.math_fns.slice import Slice
+from nn_lib.math_fns.sqrt import Sqrt
+from nn_lib.math_fns.pow2 import Pow2
+
+from nn_lib.math_fns.conv2d import Conv2d
+from nn_lib.math_fns.concat import Concat2d
+from nn_lib.math_fns.reshape import Reshape
+from nn_lib.math_fns.max_pool_2d import MaxPool2d
+from nn_lib.math_fns.max_unpooling_2d import MaxUnpool2d

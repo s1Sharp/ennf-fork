@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 import numpy as np
 
 from nn_lib.mdl.module import Module
@@ -6,22 +6,19 @@ from nn_lib import Tensor
 import nn_lib.tensor_fns as F
 
 
-class Linear(Module):
+class LinearL(Module):
     """
     Linear module is a building block of multi-layer perceptron neural network that performs a linear transform of the
     data batch
     """
-    def __init__(self, in_dim: int, out_dim: int, activation_fn: str = 'relu'):
+    def __init__(self, in_dim: int, out_dim: int):
         """
         Create a linear module similar to https://pytorch.org/docs/stable/generated/torch.nn.Linear.html
         :param in_dim: number of input dimensions of the layer
         :param out_dim: number of output dimensions of the layer
-        :param activation_fn: activation function to apply after linear transformation, either 'relu' or 'none'
         """
-        assert activation_fn in ('relu', 'none')
         self.in_dim = in_dim
         self.out_dim = out_dim
-        self.activation_fn = activation_fn
 
         scale = np.sqrt(1 / self.in_dim)
         self.weight = Tensor(self.init_parameter((self.in_dim, self.out_dim), scale), requires_grad=True)
@@ -35,8 +32,6 @@ class Linear(Module):
         """
         # weight already .T
         result = F.mat_mul(x , self.weight) + self.bias
-        if self.activation_fn == 'relu':
-            result = F.relu(result)
         return result
 
     @staticmethod
@@ -50,6 +45,9 @@ class Linear(Module):
         result = np.random.uniform(low=-scale, high=scale, size=shape)
         return result
 
+    def parameters(self) -> List[Tensor]:
+        return [self.weight, self.bias]
+
     def __str__(self):
-        result = f'Linear layer: size ({self.in_dim}, {self.out_dim}), activation {self.activation_fn}'
+        result = f'Linear layer: size ({self.in_dim}, {self.out_dim})'
         return result

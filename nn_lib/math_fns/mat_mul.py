@@ -28,7 +28,6 @@ class MatMul(Function):
         # dw = grad_output * (x * y).T * x
         x = self.args[0].data
         y = self.args[1].data
-
         result_1 = np.matmul( grad_output, y.T )
         result_2 = np.matmul( x.T, grad_output )
 

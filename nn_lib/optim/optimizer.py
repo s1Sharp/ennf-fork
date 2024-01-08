@@ -13,6 +13,7 @@ class Optimizer:
         :param parameters: list of parameters
         """
         self.parameters = parameters
+        self.lr = 0
 
     def step(self) -> None:
         """

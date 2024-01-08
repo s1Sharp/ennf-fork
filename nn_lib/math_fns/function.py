@@ -23,6 +23,7 @@ class Function:
         :param kwargs: additional key word arguments of the function
         """
         self.args = args
+        self.kwargs = kwargs
 
     def forward(self) -> np.ndarray:
         """

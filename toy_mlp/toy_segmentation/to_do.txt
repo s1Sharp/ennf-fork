@@ -1,0 +1,11 @@
+
+https://jmyao17.github.io/Machine_Learning/Neural_Network/CNN-1/CNN_Build.html
+https://github.com/codeandfire/cnn-backprop?tab=readme-ov-file
+https://github.com/pytorch/pytorch/blob/385773cb7784ecef0d37df241d7182f390138627/aten/src/ATen/native/cpu/MaxPoolKernel.cpp
+
+
+https://deeplearning.cs.cmu.edu/F21/document/recitation/Recitation5/CNN_Backprop_Recitation_5_F21.pdf
+https://cs231n.github.io/convolutional-networks/
+
+mb что-то оптимизировать maxpool2d, maxunpool, conv2d
+сохранение загрузка модели

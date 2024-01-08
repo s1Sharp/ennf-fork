@@ -24,4 +24,4 @@ class Exp(Function):
         :param grad_output: gradient over the result of the exponent function
         :return: a tuple with a single value representing the gradient over the exponent argument
         """
-        return tuple([ np.multiply(grad_output , np.exp(self.args[0].data)) ])
+        return tuple([np.multiply(grad_output , np.exp(self.args[0].data))])

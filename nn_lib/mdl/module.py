@@ -1,4 +1,4 @@
-from typing import Union, Tuple
+from typing import Union, Tuple, List
 
 from nn_lib import Tensor
 
@@ -15,6 +15,12 @@ class Module:
         :return: resulting Tensor(s)
         """
         raise NotImplementedError
+
+    def parameters(self) -> List[Tensor]:
+        """
+        The method returns trainable parameters of current layer
+        """
+        return []
 
     def __call__(self, *args, **kwargs):
         """
